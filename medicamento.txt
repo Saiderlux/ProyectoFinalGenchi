@@ -1,1 +1,1 @@
-1,Paracetamol,Quita el dolor pa,20.0,3,01/02/2024,Conasupo
+12,Paracetamol,Quita el dolor,40.0,10,02/02/2024,Conasupo
