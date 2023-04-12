@@ -204,13 +204,13 @@ public class Main {
                 if (id == idAConsultar) {
                     seEncontro = true;
                     System.out.println("ID: " + partes[0]);
-//                    System.out.println("Nombre: " + partes[1]);
-//                    System.out.println("Descripción: " + partes[2]);
-//                    System.out.println("Precio: " + partes[3]);
-//                    System.out.println("Cantidad: " + partes[4]);
-//                    System.out.println("Fecha de caducidad: " + partes[5]);
-//                    System.out.println("Laboratorio: " + partes[6]);
-//                    break;
+                    System.out.println("Nombre: " + partes[1]);
+                    System.out.println("Descripción: " + partes[2]);
+                    System.out.println("Precio: " + partes[3]);
+                    System.out.println("Cantidad: " + partes[4]);
+                    System.out.println("Fecha de caducidad: " + partes[5]);
+                    System.out.println("Laboratorio: " + partes[6]);
+                    break;
                 }
             }
             buffer.close();
