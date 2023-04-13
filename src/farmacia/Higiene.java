@@ -4,10 +4,21 @@
  */
 package farmacia;
 
-/**
- *
- * @author Ssaid
- */
-public class Higiene {
-    
+import java.text.ParseException;
+
+public class Higiene extends Producto {
+    private String marca;
+
+    public Higiene(int id, String nombre, String descripcion, double precio, int cantidad, String fechaCaducidad, String marca) throws ParseException {
+        super(id, nombre, descripcion, precio, cantidad, fechaCaducidad);
+        this.marca = marca;
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
 }
