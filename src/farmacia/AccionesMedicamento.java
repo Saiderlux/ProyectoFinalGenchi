@@ -20,9 +20,8 @@ public class AccionesMedicamento {
 
     void darDeAltaMedicamento() throws IOException {
         int id, cantidad;
-        String nombre, descipcion, fechaCaducidadStr, laboratorio;
+        String nombre, descripcion, fechaCaducidadStr, laboratorio;
         double precio;
-
         try {
             FileWriter writer = new FileWriter("medicamento.txt", true);
             BufferedWriter buffer = new BufferedWriter(writer);
@@ -30,46 +29,27 @@ public class AccionesMedicamento {
             System.out.println("Ingrese el ID del medicamento: ");
             id = scanner.nextInt();
             scanner.nextLine();
-            FileReader reader = new FileReader("medicamento.txt");
-            BufferedReader buffRead = new BufferedReader(reader);
-            String linea1 = buffRead.readLine();
-            boolean id_repetido = false;
-            while (linea1 != null) {
-                String[] partes = linea1.split(",");
-                int id_validar = Integer.parseInt(partes[0]);
-                if (id_validar == id) {
-                    id_repetido = true;
-                    System.out.println("El id ya fue dado de alta, introduce uno diferente");
-                }
-            }
+            System.out.println("Ingrese el nombre del medicamento: ");
+            nombre = scanner.nextLine();
+            System.out.println("Ingrese la descripción del medicamento: ");
+            descripcion = scanner.nextLine();
+            System.out.println("Ingrese el precio del medicamento: ");
+            precio = scanner.nextDouble();
+            System.out.println("Ingrese la cantidad de medicamento: ");
+            cantidad = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("Ingrese la fecha de caducidad del medicamento (dd/MM/yyyy): ");
+            fechaCaducidadStr = scanner.nextLine();
+            System.out.println("Ingrese el laboratorio del medicamento: ");
+            laboratorio = scanner.nextLine();
+            Medicamento medicamento = new Medicamento(id, nombre, descripcion, precio, cantidad, fechaCaducidadStr, laboratorio);
+            String linea = medicamento.getId() + "," + medicamento.getNombre() + "," + medicamento.getDescripcion() + ","
+                    + medicamento.getPrecio() + "," + medicamento.getCantidad() + ","
+                    + medicamento.getFechaCaducidad() + "," + medicamento.getLaboratorio();
+            buffer.write(linea);
+            buffer.newLine();
             buffer.close();
-            if (!id_repetido) {
-                System.out.println("Ingrese el ID del medicamento: ");
-                id = scanner.nextInt();
-                
-                System.out.println("Ingrese el nombre del medicamento: ");
-                nombre = scanner.nextLine();
-                System.out.println("Ingrese la descripción del medicamento: ");
-                String descripcion = scanner.nextLine();
-                System.out.println("Ingrese el precio del medicamento: ");
-                precio = scanner.nextDouble();
-                System.out.println("Ingrese la cantidad de medicamento: ");
-                cantidad = scanner.nextInt();
-                scanner.nextLine();
-                System.out.println("Ingrese la fecha de caducidad del medicamento (dd/MM/yyyy): ");
-                fechaCaducidadStr = scanner.nextLine();
-                System.out.println("Ingrese el laboratorio del medicamento: ");
-                laboratorio = scanner.nextLine();
-                Medicamento medicamento = new Medicamento(id, nombre, descripcion, precio, cantidad, fechaCaducidadStr, laboratorio);
-                String linea = medicamento.getId() + "," + medicamento.getNombre() + "," + medicamento.getDescripcion() + ","
-                        + medicamento.getPrecio() + "," + medicamento.getCantidad() + ","
-                        + medicamento.getFechaCaducidad() + "," + medicamento.getLaboratorio();
-                buffer.write(linea);
-                buffer.newLine();
-                buffer.close();
-                System.out.println("El medicamento se ha dado de alta exitosamente");
-            }
-
+            System.out.println("El medicamento se ha dado de alta exitosamente");
         } catch (IOException e) {
             System.out.println("Error al dar de alta el medicamento");
         }
