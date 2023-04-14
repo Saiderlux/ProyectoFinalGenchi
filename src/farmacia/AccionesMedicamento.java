@@ -29,27 +29,51 @@ public class AccionesMedicamento {
             System.out.println("Ingrese el ID del medicamento: ");
             id = scanner.nextInt();
             scanner.nextLine();
-            System.out.println("Ingrese el nombre del medicamento: ");
-            nombre = scanner.nextLine();
-            System.out.println("Ingrese la descripción del medicamento: ");
-            descripcion = scanner.nextLine();
-            System.out.println("Ingrese el precio del medicamento: ");
-            precio = scanner.nextDouble();
-            System.out.println("Ingrese la cantidad de medicamento: ");
-            cantidad = scanner.nextInt();
-            scanner.nextLine();
-            System.out.println("Ingrese la fecha de caducidad del medicamento (dd/MM/yyyy): ");
-            fechaCaducidadStr = scanner.nextLine();
-            System.out.println("Ingrese el laboratorio del medicamento: ");
-            laboratorio = scanner.nextLine();
-            Medicamento medicamento = new Medicamento(id, nombre, descripcion, precio, cantidad, fechaCaducidadStr, laboratorio);
-            String linea = medicamento.getId() + "," + medicamento.getNombre() + "," + medicamento.getDescripcion() + ","
-                    + medicamento.getPrecio() + "," + medicamento.getCantidad() + ","
-                    + medicamento.getFechaCaducidad() + "," + medicamento.getLaboratorio();
-            buffer.write(linea);
-            buffer.newLine();
-            buffer.close();
-            System.out.println("El medicamento se ha dado de alta exitosamente");
+
+            FileReader fr = new FileReader("medicamento.txt");
+            BufferedReader br = new BufferedReader(fr);
+
+            String line;
+            boolean idRepetido = false; // bandera para verificar si el ID ya existe
+
+            while ((line = br.readLine()) != null) {
+                String[] attributes = line.split(",");
+                if (attributes[0].equals(id)) { // si el ID ya existe, se activa la bandera
+                    idRepetido = true;
+                    break;
+                }
+            }
+
+            br.close();
+            fr.close();
+
+            while(idRepetido = true) {
+                System.out.println("El ID ingresado ya existe en el archivo. Ingresa otro ID");
+                id = scanner.nextInt();
+                scanner.nextLine();
+                System.out.println("Ingrese el nombre del medicamento: ");
+                nombre = scanner.nextLine();
+                System.out.println("Ingrese la descripción del medicamento: ");
+                descripcion = scanner.nextLine();
+                System.out.println("Ingrese el precio del medicamento: ");
+                precio = scanner.nextDouble();
+                System.out.println("Ingrese la cantidad de medicamento: ");
+                cantidad = scanner.nextInt();
+                scanner.nextLine();
+                System.out.println("Ingrese la fecha de caducidad del medicamento (dd/MM/yyyy): ");
+                fechaCaducidadStr = scanner.nextLine();
+                System.out.println("Ingrese el laboratorio del medicamento: ");
+                laboratorio = scanner.nextLine();
+                Medicamento medicamento = new Medicamento(id, nombre, descripcion, precio, cantidad, fechaCaducidadStr, laboratorio);
+                String linea = medicamento.getId() + "," + medicamento.getNombre() + "," + medicamento.getDescripcion() + ","
+                        + medicamento.getPrecio() + "," + medicamento.getCantidad() + ","
+                        + medicamento.getFechaCaducidad() + "," + medicamento.getLaboratorio();
+                buffer.write(linea);
+                buffer.newLine();
+                buffer.close();
+                System.out.println("El medicamento se ha dado de alta exitosamente");
+            }
+
         } catch (IOException e) {
             System.out.println("Error al dar de alta el medicamento");
         }
