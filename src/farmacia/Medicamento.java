@@ -4,12 +4,11 @@
  */
 package farmacia;
 
-import java.text.ParseException;
 
 class Medicamento extends Producto {
     private String laboratorio;
 
-    public Medicamento(int id, String nombre, String descripcion, double precio, int cantidad, String fechaCaducidad, String laboratorio) throws ParseException {
+    public Medicamento(int id, String nombre, String descripcion, double precio, int cantidad, String fechaCaducidad, String laboratorio) {
         super(id, nombre, descripcion, precio, cantidad, fechaCaducidad);
         this.laboratorio = laboratorio;
     }

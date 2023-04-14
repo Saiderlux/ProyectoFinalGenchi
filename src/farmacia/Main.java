@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         AccionesMedicamento MedAct = new AccionesMedicamento();
         Scanner scanner = new Scanner(System.in);
         while (true) {

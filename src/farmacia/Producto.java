@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 class Producto {
+
     private int id;
     private String nombre;
     private String descripcion;
@@ -17,13 +18,12 @@ class Producto {
     private int cantidad;
     private String fechaCaducidad;
 
-    public Producto(int id, String nombre, String descripcion, double precio, int cantidad, String fechaCaducidad) throws ParseException {
+    public Producto(int id, String nombre, String descripcion, double precio, int cantidad, String fechaCaducidad){
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.cantidad = cantidad;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         this.fechaCaducidad = fechaCaducidad;
     }
 
@@ -79,10 +79,4 @@ class Producto {
         return (id >= 0 && !nombre.isEmpty() && !descripcion.isEmpty() && precio > 0 && cantidad > 0);
     }
 
-    @Override
-    public String toString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        return id + "," + nombre + "," + descripcion + "," + precio + "," + cantidad + "," + dateFormat.format(fechaCaducidad);
-    }
 }
-

@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.Scanner;
 
 /**
@@ -19,44 +18,64 @@ import java.util.Scanner;
  */
 public class AccionesMedicamento {
 
-    static void darDeAltaMedicamento() {
+    void darDeAltaMedicamento() throws IOException {
+        int id, cantidad;
+        String nombre, descipcion, fechaCaducidadStr, laboratorio;
+        double precio;
+
         try {
             FileWriter writer = new FileWriter("medicamento.txt", true);
             BufferedWriter buffer = new BufferedWriter(writer);
             Scanner scanner = new Scanner(System.in);
             System.out.println("Ingrese el ID del medicamento: ");
-            int id = scanner.nextInt();
+            id = scanner.nextInt();
             scanner.nextLine();
-            System.out.println("Ingrese el nombre del medicamento: ");
-            String nombre = scanner.nextLine();
-            System.out.println("Ingrese la descripción del medicamento: ");
-            String descripcion = scanner.nextLine();
-            System.out.println("Ingrese el precio del medicamento: ");
-            double precio = scanner.nextDouble();
-            System.out.println("Ingrese la cantidad de medicamento: ");
-            int cantidad = scanner.nextInt();
-            scanner.nextLine();
-            System.out.println("Ingrese la fecha de caducidad del medicamento (dd/MM/yyyy): ");
-            String fechaCaducidadStr = scanner.nextLine();
-
-            System.out.println("Ingrese el laboratorio del medicamento: ");
-            String laboratorio = scanner.nextLine();
-            Medicamento medicamento = new Medicamento(id, nombre, descripcion, precio, cantidad, fechaCaducidadStr, laboratorio);
-            String linea = medicamento.getId() + "," + medicamento.getNombre() + "," + medicamento.getDescripcion() + ","
-                    + medicamento.getPrecio() + "," + medicamento.getCantidad() + ","
-                    + medicamento.getFechaCaducidad() + "," + medicamento.getLaboratorio();
-            buffer.write(linea);
-            buffer.newLine();
+            FileReader reader = new FileReader("medicamento.txt");
+            BufferedReader buffRead = new BufferedReader(reader);
+            String linea1 = buffRead.readLine();
+            boolean id_repetido = false;
+            while (linea1 != null) {
+                String[] partes = linea1.split(",");
+                int id_validar = Integer.parseInt(partes[0]);
+                if (id_validar == id) {
+                    id_repetido = true;
+                    System.out.println("El id ya fue dado de alta, introduce uno diferente");
+                }
+            }
             buffer.close();
-            System.out.println("El medicamento se ha dado de alta exitosamente");
+            if (!id_repetido) {
+                System.out.println("Ingrese el ID del medicamento: ");
+                id = scanner.nextInt();
+                
+                System.out.println("Ingrese el nombre del medicamento: ");
+                nombre = scanner.nextLine();
+                System.out.println("Ingrese la descripción del medicamento: ");
+                String descripcion = scanner.nextLine();
+                System.out.println("Ingrese el precio del medicamento: ");
+                precio = scanner.nextDouble();
+                System.out.println("Ingrese la cantidad de medicamento: ");
+                cantidad = scanner.nextInt();
+                scanner.nextLine();
+                System.out.println("Ingrese la fecha de caducidad del medicamento (dd/MM/yyyy): ");
+                fechaCaducidadStr = scanner.nextLine();
+                System.out.println("Ingrese el laboratorio del medicamento: ");
+                laboratorio = scanner.nextLine();
+                Medicamento medicamento = new Medicamento(id, nombre, descripcion, precio, cantidad, fechaCaducidadStr, laboratorio);
+                String linea = medicamento.getId() + "," + medicamento.getNombre() + "," + medicamento.getDescripcion() + ","
+                        + medicamento.getPrecio() + "," + medicamento.getCantidad() + ","
+                        + medicamento.getFechaCaducidad() + "," + medicamento.getLaboratorio();
+                buffer.write(linea);
+                buffer.newLine();
+                buffer.close();
+                System.out.println("El medicamento se ha dado de alta exitosamente");
+            }
+
         } catch (IOException e) {
             System.out.println("Error al dar de alta el medicamento");
-        } catch (ParseException e) {
-            System.out.println("Error al parsear la fecha de caducidad");
         }
     }
 
-    static void darDeBajaMedicamento() {
+    void darDeBajaMedicamento() {
         try {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Ingrese el ID del medicamento a dar de baja: ");
@@ -94,7 +113,7 @@ public class AccionesMedicamento {
         }
     }
 
-    static void editarMedicamento() {
+    void editarMedicamento() {
         try {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Ingrese el ID del medicamento a editar: ");
@@ -103,53 +122,55 @@ public class AccionesMedicamento {
             File archivoViejo = new File("medicamento.txt");
             File archivoNuevo = new File("medicamento.tmp");
             FileReader reader = new FileReader(archivoViejo);
-            BufferedReader buffer = new BufferedReader(reader);
-            FileWriter writer = new FileWriter(archivoNuevo, true);
-            BufferedWriter bufferNuevo = new BufferedWriter(writer);
-            String linea = "";
-            boolean seEdito = false;
-            while ((linea = buffer.readLine()) != null) {
-                String[] partes = linea.split(",");
-                int id = Integer.parseInt(partes[0]);
-                if (id == idAEditar) {
-                    System.out.println("Ingrese el nuevo nombre del medicamento (o Enter para no cambiar): ");
-                    String nombreNuevo = scanner.nextLine();
-                    if (!nombreNuevo.equals("")) {
-                        partes[1] = nombreNuevo;
+            BufferedWriter bufferNuevo;
+            boolean seEdito;
+            try (BufferedReader buffer = new BufferedReader(reader)) {
+                FileWriter writer = new FileWriter(archivoNuevo, true);
+                bufferNuevo = new BufferedWriter(writer);
+                String linea = "";
+                seEdito = false;
+                while ((linea = buffer.readLine()) != null) {
+                    String[] partes = linea.split(",");
+                    int id = Integer.parseInt(partes[0]);
+                    if (id == idAEditar) {
+                        System.out.println("Ingrese el nuevo nombre del medicamento (o Enter para no cambiar): ");
+                        String nombreNuevo = scanner.nextLine();
+                        if (!nombreNuevo.equals("")) {
+                            partes[1] = nombreNuevo;
+                        }
+                        System.out.println("Ingrese la nueva descripción del medicamento (o Enter para no cambiar): ");
+                        String descripcionNueva = scanner.nextLine();
+                        if (!descripcionNueva.equals("")) {
+                            partes[2] = descripcionNueva;
+                        }
+                        System.out.println("Ingrese el nuevo precio del medicamento (o 0 para no cambiar): ");
+                        double precioNuevo = scanner.nextDouble();
+                        scanner.nextLine();
+                        if (precioNuevo != 0) {
+                            partes[3] = Double.toString(precioNuevo);
+                        }
+                        System.out.println("Ingrese la nueva cantidad de medicamento (o 0 para no cambiar): ");
+                        int cantidadNueva = scanner.nextInt();
+                        scanner.nextLine();
+                        if (cantidadNueva != 0) {
+                            partes[4] = Integer.toString(cantidadNueva);
+                        }
+                        System.out.println("Ingrese la nueva fecha de caducidad del medicamento (en formato dd/mm/yyyy, o Enter para no cambiar): ");
+                        String fechaNueva = scanner.nextLine();
+                        if (!fechaNueva.equals("")) {
+                            partes[5] = fechaNueva;
+                        }
+                        System.out.println("Ingrese el nuevo laboratorio del medicamento (o Enter para no cambiar): ");
+                        String laboratorioNuevo = scanner.nextLine();
+                        if (!laboratorioNuevo.equals("")) {
+                            partes[6] = laboratorioNuevo;
+                        }
+                        seEdito = true;
                     }
-                    System.out.println("Ingrese la nueva descripción del medicamento (o Enter para no cambiar): ");
-                    String descripcionNueva = scanner.nextLine();
-                    if (!descripcionNueva.equals("")) {
-                        partes[2] = descripcionNueva;
-                    }
-                    System.out.println("Ingrese el nuevo precio del medicamento (o 0 para no cambiar): ");
-                    double precioNuevo = scanner.nextDouble();
-                    scanner.nextLine();
-                    if (precioNuevo != 0) {
-                        partes[3] = Double.toString(precioNuevo);
-                    }
-                    System.out.println("Ingrese la nueva cantidad de medicamento (o 0 para no cambiar): ");
-                    int cantidadNueva = scanner.nextInt();
-                    scanner.nextLine();
-                    if (cantidadNueva != 0) {
-                        partes[4] = Integer.toString(cantidadNueva);
-                    }
-                    System.out.println("Ingrese la nueva fecha de caducidad del medicamento (en formato dd/mm/yyyy, o Enter para no cambiar): ");
-                    String fechaNueva = scanner.nextLine();
-                    if (!fechaNueva.equals("")) {
-                        partes[5] = fechaNueva;
-                    }
-                    System.out.println("Ingrese el nuevo laboratorio del medicamento (o Enter para no cambiar): ");
-                    String laboratorioNuevo = scanner.nextLine();
-                    if (!laboratorioNuevo.equals("")) {
-                        partes[6] = laboratorioNuevo;
-                    }
-                    seEdito = true;
+                    bufferNuevo.write(String.join(",", partes));
+                    bufferNuevo.newLine();
                 }
-                bufferNuevo.write(String.join(",", partes));
-                bufferNuevo.newLine();
             }
-            buffer.close();
             bufferNuevo.close();
             if (!seEdito) {
                 System.out.println("No se encontró el medicamento con ID " + idAEditar);
@@ -163,7 +184,7 @@ public class AccionesMedicamento {
         }
     }
 
-    static void consultarMedicamento() {
+    void consultarMedicamento() {
         try {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Ingrese el ID del medicamento a consultar: ");
