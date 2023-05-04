@@ -1,4 +1,3 @@
-
 package farmacia;
 
 import java.io.BufferedReader;
@@ -13,6 +12,7 @@ import java.io.IOException;
  * @author Alumno
  */
 abstract class DarDeBaja {
+
     private String archivo;
     private String archivoTmp;
     private String tipoProducto;
@@ -46,12 +46,12 @@ abstract class DarDeBaja {
             buffer.close();
             bufferNuevo.close();
             if (!seElimino) {
-                System.out.println("No se encontró el " + tipoProducto +" con ID " + idADarDeBaja);
+                System.out.println("No se encontró el " + tipoProducto + " con ID " + idADarDeBaja);
                 return;
             }
             archivoViejo.delete();
             archivoNuevo.renameTo(archivoViejo);
-            System.out.println("El "+ tipoProducto +" se ha dado de baja exitosamente");
+            System.out.println("El " + tipoProducto + " se ha dado de baja exitosamente");
         } catch (IOException e) {
             System.out.println("Error al dar de baja el " + tipoProducto);
         }
@@ -59,14 +59,15 @@ abstract class DarDeBaja {
 }
 
 class DarDeBajaMedicamento extends DarDeBaja {
+
     public DarDeBajaMedicamento() {
         super("medicamento.txt", "medicamento.tmp", "medicamento");
     }
 }
 
 class DarDeBajaProductoHigiene extends DarDeBaja {
+
     public DarDeBajaProductoHigiene() {
         super("productos_higiene.txt", "productos_higiene.tmp", "producto de higiene");
     }
 }
-
