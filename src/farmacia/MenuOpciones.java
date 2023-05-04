@@ -4,11 +4,10 @@
  */
 package farmacia;
 
-import java.io.*;
-
-public class Main {
-
-    public static void main(String[] args) throws IOException {
-        
-    }
+/**
+ *
+ * @author Ssaid
+ */
+public class MenuOpciones {
+    
 }
