@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  *
@@ -23,8 +24,12 @@ abstract class DarDeBaja {
         this.tipoProducto = tipoProducto;
     }
 
-    public void darDeBaja(int idADarDeBaja) {
+    public void darDeBaja() {
         try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Ingrese el ID del medicamento a dar de baja: ");
+            int idADarDeBaja = scanner.nextInt();
+            scanner.nextLine();
             File archivoViejo = new File(archivo);
             File archivoNuevo = new File(archivoTmp);
             FileReader reader = new FileReader(archivoViejo);

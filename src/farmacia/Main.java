@@ -5,10 +5,12 @@
 package farmacia;
 
 import java.io.*;
+import java.text.ParseException;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
-        
+    public static void main(String[] args) throws IOException, ParseException {
+        MenuOpciones opciones = new MenuOpciones();
+        opciones.Menu();
     }
 }
