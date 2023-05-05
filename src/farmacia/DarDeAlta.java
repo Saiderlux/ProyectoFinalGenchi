@@ -1,9 +1,6 @@
 package farmacia;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
@@ -62,7 +59,7 @@ abstract class DarDeAlta {
                 buffer.newLine();
                 }
             }
-            System.out.println("El "+tipoProducto+" se ha dado dealta exitosamente ");
+            System.out.println("El "+tipoProducto+" se ha dado de alta exitosamente ");
         } catch (IOException e) {
             System.out.println("Error al dar de alta el "+tipoProducto);
         }
