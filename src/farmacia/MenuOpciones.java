@@ -51,11 +51,10 @@ public class MenuOpciones {
                     System.out.println("Introduce tu contraseña");
                     contraseña = scanner.nextLine();
 
-                    if (iniciarAdmin.inicio(usuario, contraseña) == true || iniciarTrabajador.inicio(usuario, contraseña) == false) {
-                         System.out.println("**El usuario ingresado no está dado de alta en el sistema**");
-                    } else {
-                       
+                    if (iniciarAdmin.inicio(usuario, contraseña) == true || iniciarTrabajador.inicio(usuario, contraseña) == true) {
                         MenuProductos();
+                    } else {
+                        System.out.println("**El usuario ingresado no está dado de alta en el sistema**");
                     }
                     break;
                 case 2:
