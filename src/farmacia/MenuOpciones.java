@@ -1,31 +1,82 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 package farmacia;
 
+import farmacia.Inicio_De_Sesion.Administrador;
+import farmacia.Inicio_De_Sesion.IniciarAdmin;
+import farmacia.Inicio_De_Sesion.IniciarTrabajador;
+import farmacia.Inicio_De_Sesion.SistemaUsuarios;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Alumno
- */
 public class MenuOpciones {
 
-    
-        public void Menu() throws IOException, ParseException{
     Scanner scanner = new Scanner(System.in);
-        System.out.println("---IENVENIDO AL SISTEMA DE FARMACIA EL SOL---\n");
+    int opcion;
+    String usuario, contraseña;
+
+    public void MenuGlobal() throws IOException, ParseException {
+
+        SistemaUsuarios sistemaUsuarios = new SistemaUsuarios();
+        IniciarAdmin iniciarAdmin = new IniciarAdmin();
+        IniciarTrabajador iniciarTrabajador = new IniciarTrabajador();
+        System.out.println("Iniciando sistema...\n");
+        // Verificar si hay al menos un administrador en el sistema
+        if (sistemaUsuarios.ComprobarAdmin("administrador.txt")) {
+            System.out.println("No hay administradores en el sistema. Debe agregar uno.");
+            System.out.print("Nombre de usuario: ");
+            String nombre = scanner.nextLine();
+            System.out.print("Contraseña: ");
+            String password = scanner.nextLine();
+
+            sistemaUsuarios.agregarUsuario(new Administrador(nombre, password));
+            sistemaUsuarios.guardarUsuarios();
+        }
+
+        while (true) {
+            System.out.println("Bienvenido ¿Qué deseas realizar?(Seleccione una oción)");
+            System.out.println("1. Iniciar el sistema.");
+            System.out.println("2.Dar de alta nuevos usuarios");
+            opcion = scanner.nextInt();
+            switch (opcion) {
+                case 1:
+                    System.out.println("Introduce tu nombre de usuario");
+                    usuario = scanner.nextLine();
+                    System.out.println("Introduce tu contraseña");
+                    contraseña = scanner.nextLine();
+
+                    if (iniciarAdmin.inicio(usuario, contraseña) == true || iniciarTrabajador.inicio(usuario, contraseña) == true) {
+                        MenuProductos();
+                    } else {
+                        System.out.println("**El usuario ingresado no está dado de alta en el sistema**");
+                    }
+                    break;
+                case 2:
+                    System.out.println("Introduce tu nombre de usuario");
+                    usuario = scanner.nextLine();
+                    System.out.println("Introduce tu contraseña");
+                    contraseña = scanner.nextLine();
+                    if (iniciarAdmin.inicio(usuario, contraseña) == true) {
+
+                    }
+
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+        }
+
+    }
+
+    public void MenuProductos() throws IOException, ParseException {
+
+        System.out.println("---BIENVENIDO AL SISTEMA DE FARMACIA EL SOL---\n");
         System.out.println("Seleccione una opcion: ");
         System.out.println("1. Acciones de medicamentos");
         System.out.println("2. Acciones de productos de higiene");
         System.out.println("3. Salir\n");
-
-        int opcion = scanner.nextInt();
+        opcion = scanner.nextInt();
         scanner.nextLine();
         switch (opcion) {
             case 1:
@@ -56,7 +107,7 @@ public class MenuOpciones {
                             EditMed.Editar();
                             break;
                         case 4:
-                            ConsultarMedicamento ConsMed= new ConsultarMedicamento();
+                            ConsultarMedicamento ConsMed = new ConsultarMedicamento();
                             System.out.println("--CONSULTAR MEDICAMENTO--");
                             ConsMed.Consultar();
                             break;
