@@ -14,6 +14,6 @@ public class Main {
         MenuOpciones opciones = new MenuOpciones();
         AccionesSesion InicioSesion = new AccionesSesion();
         InicioSesion.Acciones();
-        opciones.MenuGlobal();
+//       opciones.MenuGlobal();
     }
 }

@@ -1,5 +1,6 @@
 package farmacia;
 
+import farmacia.Inicio_De_Sesion.AccionesSesion;
 import farmacia.Inicio_De_Sesion.Administrador;
 import farmacia.Inicio_De_Sesion.IniciarAdmin;
 import farmacia.Inicio_De_Sesion.IniciarTrabajador;
@@ -22,20 +23,23 @@ public class MenuOpciones {
         IniciarAdmin iniciarAdmin = new IniciarAdmin();
         IniciarTrabajador iniciarTrabajador = new IniciarTrabajador();
         System.out.println("Iniciando sistema...\n");
+        
         // Verificar si hay al menos un administrador en el sistema
-        if (sistemaUsuarios.ComprobarAdmin("administrador.txt")) {
-            System.out.println("No hay administradores en el sistema. Debe agregar uno.");
-            System.out.print("Nombre de usuario: ");
-            String nombre = scanner.nextLine();
-            System.out.print("Contraseña: ");
-            String password = scanner.nextLine();
+            if (sistemaUsuarios.ComprobarAdmin("administradores")) {
+                System.out.println("No hay administradores en el sistema. Debe agregar uno.");
+                System.out.print("Nombre de usuario: ");
+                String nombre = scanner.nextLine();
+                System.out.print("Contraseña: ");
+                String password = scanner.nextLine();
 
-            sistemaUsuarios.agregarUsuario(new Administrador(nombre, password));
-            sistemaUsuarios.guardarUsuarios();
-        }
-
+                sistemaUsuarios.agregarUsuario(new Administrador(nombre, password));
+                sistemaUsuarios.guardarUsuarios();
+            }
+            
         while (true) {
-            System.out.println("Bienvenido ¿Qué deseas realizar?(Seleccione una oción)");
+
+            
+            System.out.println("Bienvenido ¿Que deseas realizar?(Seleccione una opcion)");
             System.out.println("1. Iniciar el sistema.");
             System.out.println("2.Dar de alta nuevos usuarios");
             opcion = scanner.nextInt();
@@ -43,6 +47,7 @@ public class MenuOpciones {
                 case 1:
                     System.out.println("Introduce tu nombre de usuario");
                     usuario = scanner.nextLine();
+                    scanner.nextLine();
                     System.out.println("Introduce tu contraseña");
                     contraseña = scanner.nextLine();
 
@@ -55,10 +60,14 @@ public class MenuOpciones {
                 case 2:
                     System.out.println("Introduce tu nombre de usuario");
                     usuario = scanner.nextLine();
+                    scanner.nextLine();
                     System.out.println("Introduce tu contraseña");
                     contraseña = scanner.nextLine();
                     if (iniciarAdmin.inicio(usuario, contraseña) == true) {
-
+                        AccionesSesion AccionesSesion = new AccionesSesion();
+                        AccionesSesion.Acciones();
+                    }else {
+                        System.out.println("**El usuario ingresado no está dado de alta en el sistema**");
                     }
 
                     break;

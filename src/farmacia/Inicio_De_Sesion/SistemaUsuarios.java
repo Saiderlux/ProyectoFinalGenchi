@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class SistemaUsuarios {
@@ -25,44 +26,46 @@ public class SistemaUsuarios {
 
     // Método para cargar los usuarios desde un archivo
     public void cargarUsuarios() {
-        try (Scanner scanner = new Scanner(new File("usuarios.txt"))) {
-            while (scanner.hasNextLine()) {
-                String[] datos = scanner.nextLine().split(",");
-                String nombre = datos[0];
-                String password = datos[1];
-                String archivoAdministradores= "administradores.txt";
-                String archivoTrabajadores= "administradores.txt";
-                // Crear un nuevo usuario del tipo adecuado
-                if (archivoAdministradores.contains(nombre + "," + password)) {
-                    usuarios.add(new Administrador(nombre, password));
-                } else if (archivoTrabajadores.contains(nombre + "," + password)) {
-                    usuarios.add(new Trabajador(nombre, password));
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Archivo de usuarios no encontrado.");
+        Scanner trabajadoresScanner = new Scanner("trabajadores.txt");
+        Scanner administradoresScanner = new Scanner("administradores.txt");
+        while (trabajadoresScanner.hasNextLine()) {
+            String[] datos = trabajadoresScanner.nextLine().split(",");
+            String nombre = datos[0];
+            String password = datos[1];
+            usuarios.add(new Trabajador(nombre, password));
         }
+        while (administradoresScanner.hasNextLine()) {
+            String[] datos = administradoresScanner.nextLine().split(",");
+            String nombre = datos[0];
+            String password = datos[1];
+            usuarios.add(new Administrador(nombre, password));
+        }
+        trabajadoresScanner.close();
+        administradoresScanner.close();
     }
 
-   
-
-    // Método para guardar los usuarios en un archivo
+// Método para guardar los usuarios en un archivo
     public void guardarUsuarios() {
-        try (PrintWriter writerAdmin = new PrintWriter(new File("administradores.txt")); PrintWriter writerTrab = new PrintWriter(new File("trabajadores.txt"))) {
+        try {
+            PrintWriter trabajadoresWriter = new PrintWriter(new FileWriter("trabajadores.txt"));
+            PrintWriter administradoresWriter = new PrintWriter(new FileWriter("administradores.txt"));
+
             for (Usuario usuario : usuarios) {
-                String linea = usuario.getNombre() + "," + usuario.getPassword();
-                if (usuario.getRol().equals("administrador")) {
-                    writerAdmin.println(linea);
-                } else if (usuario.getRol().equals("trabajador")) {
-                    writerTrab.println(linea);
+                if (usuario instanceof Trabajador) {
+                    trabajadoresWriter.println(usuario.getNombre() + "," + usuario.getPassword());
+                } else if (usuario instanceof Administrador) {
+                    administradoresWriter.println(usuario.getNombre() + "," + usuario.getPassword());
                 }
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("Error al guardar usuarios.");
+
+            trabajadoresWriter.close();
+            administradoresWriter.close();
+        } catch (IOException e) {
+            System.out.println("Error al guardar los usuarios");
         }
     }
 
-    // Método para agregar un usuario al sistema
+// Método para agregar un usuario al sistema
     public void agregarUsuario(Usuario usuario) {
         usuarios.add(usuario);
     }
@@ -78,52 +81,42 @@ public class SistemaUsuarios {
     }
 
     // Método para verificar si hay al menos un administrador en el sistema
-    public static boolean ComprobarAdmin(String fileName) {
+    public boolean ComprobarAdmin(String fileName) {
         File file = new File(fileName);
         return file.length() > 0;
     }
 
     public void darDeBajaTrabajador(String nombre) {
         try {
-            File inputFile = new File("trabajadores.txt");
-            File tempFile = new File("temp.txt");
-
-            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-
-            String currentLine;
-            boolean encontrado = false;
-
-            while ((currentLine = reader.readLine()) != null) {
-                String[] datos = currentLine.split(",");
-                if (datos[0].equals(nombre)) {
-                    encontrado = true;
-                } else {
-                    writer.write(currentLine + System.getProperty("line.separator"));
+            File archivoViejo = new File("trabajadores.txt");
+            File archivoNuevo = new File("trabajadores.tmp");
+            FileReader reader = new FileReader(archivoViejo);
+            BufferedReader buffer = new BufferedReader(reader);
+            FileWriter writer = new FileWriter(archivoNuevo, true);
+            BufferedWriter bufferNuevo = new BufferedWriter(writer);
+            String linea = "";
+            boolean seElimino = false;
+            while ((linea = buffer.readLine()) != null) {
+                String[] partes = linea.split(",");
+                String nombreBorrar = partes[0];
+                if (nombreBorrar.equals(nombre)) {
+                    seElimino = true;
+                    continue;
                 }
+                bufferNuevo.write(linea);
+                bufferNuevo.newLine();
             }
-            writer.close();
-            reader.close();
-
-            if (!encontrado) {
-                System.out.println("Trabajador no encontrado.");
+            buffer.close();
+            bufferNuevo.close();
+            if (!seElimino) {
+                System.out.println("No se encontró el trabajador con nombre de usuario: " + nombre);
                 return;
             }
-
-            if (!inputFile.delete()) {
-                System.out.println("No se pudo eliminar el archivo de trabajadores.");
-                return;
-            }
-
-            if (!tempFile.renameTo(inputFile)) {
-                System.out.println("No se pudo renombrar el archivo temporal.");
-                return;
-            }
-
-            System.out.println("Trabajador dado de baja correctamente.");
-
+            archivoViejo.delete();
+            archivoNuevo.renameTo(archivoViejo);
+            System.out.println("El trabajador se ha dado de baja exitosamente");
         } catch (IOException e) {
-            System.out.println("Error al dar de baja el trabajador: " + e.getMessage());
+            System.out.println("Error al dar de baja al trabajador");
         }
     }
 

@@ -15,7 +15,7 @@ public class AccionesSesion {
 
     public void Acciones() {
         SistemaUsuarios sistemaUsuarios = new SistemaUsuarios();
-        sistemaUsuarios.cargarUsuarios();
+//        sistemaUsuarios.cargarUsuarios();
 
         Scanner scanner = new Scanner(System.in);
         int opcion = 0;
@@ -55,11 +55,7 @@ public class AccionesSesion {
                 case 3:
                     System.out.println("Introduce el nombre de usuario a eliminar");
                     String usuarioBorrar = scanner.nextLine();
-                    int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea continuar?", "Confirmación", JOptionPane.YES_NO_OPTION);
-
-                    if (respuesta == JOptionPane.YES_OPTION) {
-                        sistemaUsuarios.darDeBajaTrabajador(usuarioBorrar);
-                    }
+                    sistemaUsuarios.darDeBajaTrabajador(usuarioBorrar);
                     break;
                 case 4:
                     System.out.println("Saliendo del programa.");
