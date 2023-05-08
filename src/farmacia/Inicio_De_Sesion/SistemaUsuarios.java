@@ -81,9 +81,20 @@ public class SistemaUsuarios {
     }
 
     // Método para verificar si hay al menos un administrador en el sistema
-    public boolean ComprobarAdmin(String fileName) {
-        File file = new File(fileName);
-        return file.length() > 0;
+    public boolean archivoConDatos(String nombreArchivo) {
+        File archivo = new File(nombreArchivo);
+        if (!archivo.exists()) {
+            try {
+                archivo.createNewFile();
+            } catch (IOException e) {
+                System.out.println("Error al crear el archivo");
+            }
+            return false;
+        } else if (archivo.length() == 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public void darDeBajaTrabajador(String nombre) {

@@ -25,7 +25,7 @@ public class MenuOpciones {
         System.out.println("Iniciando sistema...\n");
         
         // Verificar si hay al menos un administrador en el sistema
-            if (sistemaUsuarios.ComprobarAdmin("administradores")) {
+            if (sistemaUsuarios.archivoConDatos("administradores.txt")==false) {
                 System.out.println("No hay administradores en el sistema. Debe agregar uno.");
                 System.out.print("Nombre de usuario: ");
                 String nombre = scanner.nextLine();
@@ -51,10 +51,11 @@ public class MenuOpciones {
                     System.out.println("Introduce tu contraseña");
                     contraseña = scanner.nextLine();
 
-                    if (iniciarAdmin.inicio(usuario, contraseña) == true || iniciarTrabajador.inicio(usuario, contraseña) == true) {
-                        MenuProductos();
+                    if (iniciarAdmin.inicio(usuario, contraseña) == true || iniciarTrabajador.inicio(usuario, contraseña) == false) {
+                         System.out.println("**El usuario ingresado no está dado de alta en el sistema**");
                     } else {
-                        System.out.println("**El usuario ingresado no está dado de alta en el sistema**");
+                       
+                        MenuProductos();
                     }
                     break;
                 case 2:
@@ -63,7 +64,7 @@ public class MenuOpciones {
                     scanner.nextLine();
                     System.out.println("Introduce tu contraseña");
                     contraseña = scanner.nextLine();
-                    if (iniciarAdmin.inicio(usuario, contraseña) == true) {
+                    if ((iniciarAdmin.inicio(usuario, contraseña)) == true) {
                         AccionesSesion AccionesSesion = new AccionesSesion();
                         AccionesSesion.Acciones();
                     }else {

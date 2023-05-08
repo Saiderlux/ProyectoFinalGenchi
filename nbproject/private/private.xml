@@ -4,11 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Ssaid/Documents/NetBeansProjects/Farmacia/src/farmacia/Main.java</file>
+            <file>file:/C:/Users/Ssaid/Documents/NetBeansProjects/Farmacia/src/farmacia/Inicio_De_Sesion/IniciarAdmin.java</file>
             <file>file:/C:/Users/Ssaid/Documents/NetBeansProjects/Farmacia/src/farmacia/MenuOpciones.java</file>
-            <file>file:/C:/Users/Ssaid/Documents/NetBeansProjects/Farmacia/src/farmacia/DarDeAlta.java</file>
             <file>file:/C:/Users/Ssaid/Documents/NetBeansProjects/Farmacia/src/farmacia/Producto.java</file>
             <file>file:/C:/Users/Ssaid/Documents/NetBeansProjects/Farmacia/src/farmacia/Higiene.java</file>
-            <file>file:/C:/Users/Ssaid/Documents/NetBeansProjects/Farmacia/src/farmacia/DarDeBaja.java</file>
+            <file>file:/C:/Users/Ssaid/Documents/NetBeansProjects/Farmacia/src/farmacia/Inicio_De_Sesion/SistemaUsuarios.java</file>
         </group>
     </open-files>
 </project-private>

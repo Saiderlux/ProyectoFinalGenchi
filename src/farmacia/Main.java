@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) throws IOException, ParseException {
         MenuOpciones opciones = new MenuOpciones();
         AccionesSesion InicioSesion = new AccionesSesion();
-        InicioSesion.Acciones();
-//       opciones.MenuGlobal();
+       // InicioSesion.Acciones();
+      opciones.MenuGlobal();
     }
 }

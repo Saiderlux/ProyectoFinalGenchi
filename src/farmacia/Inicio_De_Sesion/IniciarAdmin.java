@@ -4,8 +4,11 @@
  */
 package farmacia.Inicio_De_Sesion;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -14,29 +17,24 @@ import java.util.StringTokenizer;
  * @author Ssaid
  */
 public class IniciarAdmin {
-    public boolean inicio(String nombreUsuario, String contrasena) {
+    public boolean inicio(String usuario, String contraseña) {
         try {
-            File archivoUsuarios = new File("administradores.txt");
-            Scanner scanner = new Scanner(archivoUsuarios);
-
-            while (scanner.hasNextLine()) {
-                String linea = scanner.nextLine();
-                StringTokenizer tokenizer = new StringTokenizer(linea, ",");
-
-                String usuario = tokenizer.nextToken();
-                String contraseña = tokenizer.nextToken();
-
-                if (usuario.equals(nombreUsuario) && contraseña.equals(contrasena)) {
-                    return true;
-                }
+        FileReader reader = new FileReader("administradores.txt");
+        BufferedReader buffer = new BufferedReader(reader);
+        String linea;
+        while ((linea = buffer.readLine()) != null) {
+            String[] partes = linea.split(",");
+            String nombreUsuario = partes[0];
+            String password = partes[1];
+            if (nombreUsuario.equals(usuario) && password.equals(contraseña)) {
+                buffer.close();
+                return true;
             }
-
-            scanner.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("Error al abrir el archivo de usuarios.");
         }
-
-        return false;
+        buffer.close();
+    } catch (IOException e) {
+        System.out.println("Error al leer el archivo: " + e.getMessage());
     }
+    return false;
+}
 }
