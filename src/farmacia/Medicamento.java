@@ -8,8 +8,8 @@ package farmacia;
 class Medicamento extends Producto {
     private String laboratorio;
 
-    public Medicamento(int id, String nombre, String descripcion, double precio, int cantidad, String fechaCaducidad, String laboratorio) {
-        super(id, nombre, descripcion, precio, cantidad, fechaCaducidad);
+    public Medicamento(int id, String nombre, String descripcion, double precio, int cantidad, String laboratorio) {
+        super(id, nombre, descripcion, precio, cantidad);
         this.laboratorio = laboratorio;
     }
 

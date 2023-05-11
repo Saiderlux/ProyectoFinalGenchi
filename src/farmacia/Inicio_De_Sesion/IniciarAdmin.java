@@ -25,12 +25,15 @@ public class IniciarAdmin {
             if (nombreUsuario.equals(usuario) && password.equals(contraseña)) {
                 buffer.close();
                 return true;
+            }else{
+            return false;
             }
         }
         buffer.close();
     } catch (IOException e) {
         System.out.println("Error al leer el archivo: " + e.getMessage());
     }
-    return false;
+        return true;
+   
 }
 }

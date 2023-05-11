@@ -4,7 +4,7 @@ package farmacia.Inicio_De_Sesion;
 
 import java.util.Iterator;
 
-class Trabajador extends Usuario {
+public class Trabajador extends Usuario {
 
     static Iterator<Trabajador> iterator() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

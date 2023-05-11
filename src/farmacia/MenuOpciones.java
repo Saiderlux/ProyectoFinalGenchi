@@ -1,15 +1,15 @@
 package farmacia;
 
-import farmacia.Inicio_De_Sesion.AccionesSesion;
+
 import farmacia.Inicio_De_Sesion.Administrador;
 import farmacia.Inicio_De_Sesion.IniciarAdmin;
 import farmacia.Inicio_De_Sesion.IniciarTrabajador;
 import farmacia.Inicio_De_Sesion.SistemaUsuarios;
+import farmacia.Inicio_De_Sesion.Trabajador;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class MenuOpciones {
 
@@ -23,51 +23,56 @@ public class MenuOpciones {
         IniciarAdmin iniciarAdmin = new IniciarAdmin();
         IniciarTrabajador iniciarTrabajador = new IniciarTrabajador();
         System.out.println("Iniciando sistema...\n");
-        
-        // Verificar si hay al menos un administrador en el sistema
-            if (sistemaUsuarios.archivoConDatos("administradores.txt")==false) {
-                System.out.println("No hay administradores en el sistema. Debe agregar uno.");
-                System.out.print("Nombre de usuario: ");
-                String nombre = scanner.nextLine();
-                System.out.print("Contraseña: ");
-                String password = scanner.nextLine();
 
-                sistemaUsuarios.agregarUsuario(new Administrador(nombre, password));
-                sistemaUsuarios.guardarUsuarios();
-            }
-            
+        // Verificar si hay al menos un administrador en el sistema
+        if (sistemaUsuarios.archivoConDatos("administradores.txt") == false) {
+            System.out.println("No hay administradores en el sistema. Debe agregar uno.");
+            System.out.print("Nombre de usuario: ");
+            String nombre = scanner.nextLine();
+            System.out.print("Contraseña: ");
+            String password = scanner.nextLine();
+
+            sistemaUsuarios.agregarUsuario(new Administrador(nombre, password));
+            sistemaUsuarios.guardarUsuarios();
+        }
+
         while (true) {
 
-            
             System.out.println("Bienvenido ¿Que deseas realizar?(Seleccione una opcion)");
             System.out.println("1. Iniciar el sistema.");
-            System.out.println("2.Dar de alta nuevos usuarios");
+            System.out.println("2.Dar de alta nuevos usuarios (SE REQUIERE CUENTA DE ADMINISTRADOR)");
             opcion = scanner.nextInt();
             switch (opcion) {
                 case 1:
-                    System.out.println("Introduce tu nombre de usuario");
-                    usuario = scanner.nextLine();
-                    scanner.nextLine();
+                    System.out.println("\nIntroduce tu nombre de usuario");
+                    usuario = scanner.next();
+
                     System.out.println("Introduce tu contraseña");
-                    contraseña = scanner.nextLine();
+                    contraseña = scanner.next();
 
                     if (iniciarAdmin.inicio(usuario, contraseña) == true || iniciarTrabajador.inicio(usuario, contraseña) == true) {
+                        System.out.println("\nInicio de sesión exitoso");
                         MenuProductos();
                     } else {
-                        System.out.println("**El usuario ingresado no está dado de alta en el sistema**");
+                        System.out.println("\nEl usuario o contraseña son invalidos\n");
                     }
                     break;
+                    
                 case 2:
-                    System.out.println("Introduce tu nombre de usuario");
-                    usuario = scanner.nextLine();
-                    scanner.nextLine();
-                    System.out.println("Introduce tu contraseña");
-                    contraseña = scanner.nextLine();
-                    if ((iniciarAdmin.inicio(usuario, contraseña)) == true) {
-                        AccionesSesion AccionesSesion = new AccionesSesion();
-                        AccionesSesion.Acciones();
-                    }else {
-                        System.out.println("**El usuario ingresado no está dado de alta en el sistema**");
+                    System.out.println("\nIngrese su nombre de usuario:");
+                    usuario = scanner.next();
+                    
+                    System.out.println("Ingrese su contraseña:");
+                    contraseña = scanner.next();
+
+                    boolean esValido = iniciarAdmin.inicio(usuario, contraseña);
+
+                    if (esValido) {
+                        System.out.println("\nInicio de sesión exitoso");
+                       Acciones();
+                    } else {
+                        System.out.println("\nEl usuario o la contraseña no son válidos\n");
+                        
                     }
 
                     break;
@@ -80,7 +85,7 @@ public class MenuOpciones {
 
     public void MenuProductos() throws IOException, ParseException {
 
-        System.out.println("---BIENVENIDO AL SISTEMA DE FARMACIA EL SOL---\n");
+        System.out.println("\n---BIENVENIDO AL SISTEMA DE FARMACIA EL SOL---\n");
         System.out.println("Seleccione una opcion: ");
         System.out.println("1. Acciones de medicamentos");
         System.out.println("2. Acciones de productos de higiene");
@@ -176,6 +181,58 @@ public class MenuOpciones {
             default:
                 System.out.println("Opción inválida");
                 break;
+        }
+    }
+     public void Acciones() {
+        SistemaUsuarios sistemaUsuarios = new SistemaUsuarios();
+
+        Scanner scanner = new Scanner(System.in);
+        int opcion = 0;
+
+        while (opcion != 4) {
+            System.out.println("\nMenú de opciones:");
+            System.out.println("1. Dar de alta un administrador");
+            System.out.println("2. Dar de alta un trabajador");
+            System.out.println("3. Dar de baja un trabajador");
+            System.out.println("4. Volver al inicio");
+
+            System.out.print("Ingrese una opción: ");
+            opcion = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea
+
+            switch (opcion) {
+                case 1:
+                    System.out.print("Nombre de usuario: ");
+                    String nombreAdmin = scanner.nextLine();
+                    System.out.print("Contraseña: ");
+                    String passwordAdmin = scanner.nextLine();
+
+                    sistemaUsuarios.agregarUsuario(new Administrador(nombreAdmin, passwordAdmin));
+                    sistemaUsuarios.guardarUsuarios();
+                    System.out.println("Administrador agregado correctamente.");
+                    break;
+                case 2:
+                    System.out.print("Nombre de usuario: ");
+                    String nombreTrab = scanner.nextLine();
+                    System.out.print("Contraseña: ");
+                    String passwordTrab = scanner.nextLine();
+
+                    sistemaUsuarios.agregarUsuario(new Trabajador(nombreTrab, passwordTrab));
+                    sistemaUsuarios.guardarUsuarios();
+                    System.out.println("Trabajador agregado correctamente.");
+                    break;
+                case 3:
+                    System.out.println("Introduce el nombre de usuario a eliminar");
+                    String usuarioBorrar = scanner.nextLine();
+                    sistemaUsuarios.darDeBajaTrabajador(usuarioBorrar);
+                    break;
+                case 4:
+                    System.out.println("\nVolviendo al inicio...\n");
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+                    break;
+            }
         }
     }
 }

@@ -4,10 +4,7 @@
  */
 package farmacia;
 
-import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+
 
 class Producto {
 
@@ -16,15 +13,15 @@ class Producto {
     private String descripcion;
     private double precio;
     private int cantidad;
-    private String fechaCaducidad;
+   
 
-    public Producto(int id, String nombre, String descripcion, double precio, int cantidad, String fechaCaducidad){
+    public Producto(int id, String nombre, String descripcion, double precio, int cantidad){
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.cantidad = cantidad;
-        this.fechaCaducidad = fechaCaducidad;
+      
     }
 
     public int getId() {
@@ -65,14 +62,6 @@ class Producto {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
-    }
-
-    public String getFechaCaducidad() {
-        return fechaCaducidad;
-    }
-
-    public void setFechaCaducidad(String fechaCaducidad) throws ParseException {
-        this.fechaCaducidad = fechaCaducidad;
     }
 
     public boolean validar() {

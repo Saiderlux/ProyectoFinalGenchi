@@ -9,8 +9,8 @@ import java.text.ParseException;
 public class Higiene extends Producto {
     private String marca;
 
-    public Higiene(int id, String nombre, String descripcion, double precio, int cantidad, String fechaCaducidad, String marca) throws ParseException {
-        super(id, nombre, descripcion, precio, cantidad, fechaCaducidad);
+    public Higiene(int id, String nombre, String descripcion, double precio, int cantidad, String marca) throws ParseException {
+        super(id, nombre, descripcion, precio, cantidad);
         this.marca = marca;
     }
 

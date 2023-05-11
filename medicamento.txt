@@ -1,3 +1,1 @@
-1,sdfsdfsd,sdfgsdfsdf,112.0,43,12345,sxzsdgfgdh
-1,dfghdfg,sdfgsfgsdf,23.0,1,34234,sdfdhfgh
-1,1,1,1.0,1,1,1
+1,Yo,siiii,10.0,10,No
