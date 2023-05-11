@@ -19,8 +19,6 @@ abstract class Usuario {
         return password;
     }
 
-    // Método abstracto para obtener el rol del usuario
-    public abstract String getRol();
 }
 
 

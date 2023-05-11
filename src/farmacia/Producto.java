@@ -64,8 +64,6 @@ class Producto {
         this.cantidad = cantidad;
     }
 
-    public boolean validar() {
-        return (id >= 0 && !nombre.isEmpty() && !descripcion.isEmpty() && precio > 0 && cantidad > 0);
-    }
+
 
 }

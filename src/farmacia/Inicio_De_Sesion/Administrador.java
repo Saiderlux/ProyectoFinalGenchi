@@ -11,8 +11,4 @@ public class Administrador extends Usuario {
         super(nombre, password);
     }
 
-    @Override
-    public String getRol() {
-        return "administrador";
-    }
 }

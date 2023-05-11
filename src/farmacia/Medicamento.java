@@ -20,16 +20,6 @@ class Medicamento extends Producto {
     public void setLaboratorio(String laboratorio) {
         this.laboratorio = laboratorio;
     }
-
-    @Override
-    public boolean validar() {
-        return (super.validar() && !laboratorio.isEmpty());
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + "," + laboratorio;
-    }
 }
 
 

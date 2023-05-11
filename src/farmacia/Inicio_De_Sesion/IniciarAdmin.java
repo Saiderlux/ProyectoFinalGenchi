@@ -25,8 +25,6 @@ public class IniciarAdmin {
             if (nombreUsuario.equals(usuario) && password.equals(contraseña)) {
                 buffer.close();
                 return true;
-            }else{
-            return false;
             }
         }
         buffer.close();
