@@ -1,6 +1,5 @@
 package farmacia;
 
-
 import farmacia.Inicio_De_Sesion.Administrador;
 import farmacia.Inicio_De_Sesion.IniciarAdmin;
 import farmacia.Inicio_De_Sesion.IniciarTrabajador;
@@ -9,7 +8,6 @@ import farmacia.Inicio_De_Sesion.Trabajador;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Scanner;
-
 
 public class MenuOpciones {
 
@@ -57,11 +55,11 @@ public class MenuOpciones {
                         System.out.println("\nEl usuario o contraseña son invalidos\n");
                     }
                     break;
-                    
+
                 case 2:
                     System.out.println("\nIngrese su nombre de usuario:");
                     usuario = scanner.next();
-                    
+
                     System.out.println("Ingrese su contraseña:");
                     contraseña = scanner.next();
 
@@ -69,10 +67,10 @@ public class MenuOpciones {
 
                     if (esValido) {
                         System.out.println("\nInicio de sesión exitoso");
-                       Acciones();
+                        Acciones();
                     } else {
                         System.out.println("\nEl usuario o la contraseña no son válidos\n");
-                        
+
                     }
 
                     break;
@@ -183,7 +181,8 @@ public class MenuOpciones {
                 break;
         }
     }
-     public void Acciones() {
+
+    public void Acciones() {
         SistemaUsuarios sistemaUsuarios = new SistemaUsuarios();
 
         Scanner scanner = new Scanner(System.in);
