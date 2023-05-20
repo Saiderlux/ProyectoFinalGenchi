@@ -18,11 +18,13 @@ abstract class DarDeAlta {
     private String tipoProducto;
     private String archivo;
     private String procedencia;
+    private String identificador;
 
-    public DarDeAlta(String archivo, String tipoProducto, String procedencia) {
+    public DarDeAlta(String archivo, String tipoProducto, String procedencia, String identificador) {
         this.archivo = archivo;
         this.tipoProducto = tipoProducto;
         this.procedencia = procedencia;
+        this.identificador = identificador;
     }
 
     public void darDeAlta() throws ParseException {
@@ -43,38 +45,38 @@ abstract class DarDeAlta {
                 br.close();
                 fr.close();
                 while (!end) {
-                    System.out.println("Ingrese el ID del medicamento: ");
+                    System.out.println("Ingrese el ID del " + tipoProducto + ": ");
                     String id = scanner.next();
-                    if (lista.contains(id)) {
+                    if (lista.contains(identificador + id)) {
                         System.out.println("El ID ingresado ya existe en el archivo. Ingresa otro ID");
                     } else {
 
                         System.out.println("Ingrese el nombre del " + tipoProducto + ":");
-                        String nombre = scanner.next();
+                        String nombre = scanner.nextLine();
 
                         System.out.println("Ingrese la descripción del " + tipoProducto + ":");
-                        String descripcion = scanner.next();
+                        String descripcion = scanner.nextLine();
 
                         System.out.println("Ingrese el precio del " + tipoProducto + ":");
                         double precio = scanner.nextDouble();
-                        scanner.nextLine();
+                        scanner.nextLine(); // Consumir el salto de línea pendiente
 
                         System.out.println("Ingrese la cantidad del " + tipoProducto + ":");
                         int cantidad = scanner.nextInt();
-                        scanner.nextLine();
+                        scanner.nextLine(); // Consumir el salto de línea pendiente
 
                         System.out.println("Ingrese " + procedencia + " del " + tipoProducto + ":");
-                        String marca_lab = scanner.next();
+                        String marca_lab = scanner.nextLine();
 
                         if ("producto de higiene".equals(tipoProducto)) {
                             Higiene higiene = new Higiene(Integer.parseInt(id), nombre, descripcion, precio, cantidad, marca_lab);
-                            String linea = higiene.getId() + "," + higiene.getNombre() + "," + higiene.getDescripcion() + ","
+                            String linea = "H" + higiene.getId() + "," + higiene.getNombre() + "," + higiene.getDescripcion() + ","
                                     + higiene.getPrecio() + "," + higiene.getCantidad() + "," + higiene.getMarca();
                             buffer.write(linea);
                             buffer.newLine();
                         } else if ("medicamento".equals(tipoProducto)) {
                             Medicamento medicamento = new Medicamento(Integer.parseInt(id), nombre, descripcion, precio, cantidad, marca_lab);
-                            String linea = medicamento.getId() + "," + medicamento.getNombre() + "," + medicamento.getDescripcion() + ","
+                            String linea = "M" + medicamento.getId() + "," + medicamento.getNombre() + "," + medicamento.getDescripcion() + ","
                                     + medicamento.getPrecio() + "," + medicamento.getCantidad() + "," + medicamento.getLaboratorio();
                             buffer.write(linea);
                             buffer.newLine();
@@ -93,13 +95,13 @@ abstract class DarDeAlta {
 class DarDeAltaMedicamento extends DarDeAlta {
 
     public DarDeAltaMedicamento() {
-        super("medicamento.txt", "medicamento", "el laboratorio");
+        super("medicamento.txt", "medicamento", "el laboratorio", "M");
     }
 }
 
 class DarDeAltaProductoHigiene extends DarDeAlta {
 
     public DarDeAltaProductoHigiene() {
-        super("productos_higiene.txt", "producto de higiene", "la marca");
+        super("productos_higiene.txt", "producto de higiene", "la marca", "H");
     }
 }

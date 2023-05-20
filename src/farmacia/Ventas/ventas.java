@@ -4,10 +4,6 @@
  */
 package farmacia.Ventas;
 
-/**
- *
- * @author Ssaid
- */
 public class ventas {
     
 }
