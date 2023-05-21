@@ -38,7 +38,8 @@ public class MenuOpciones {
 
             System.out.println("Bienvenido ¿Que deseas realizar?(Seleccione una opcion)");
             System.out.println("1. Iniciar el sistema.");
-            System.out.println("2.Dar de alta nuevos usuarios (SE REQUIERE CUENTA DE ADMINISTRADOR)");
+            System.out.println("2. Sistema de ventas");
+            System.out.println("3.Dar de alta nuevos usuarios (SE REQUIERE CUENTA DE ADMINISTRADOR)");
             opcion = scanner.nextInt();
             switch (opcion) {
                 case 1:
@@ -55,8 +56,10 @@ public class MenuOpciones {
                         System.out.println("\nEl usuario o contraseña son invalidos\n");
                     }
                     break;
-
                 case 2:
+                    
+                    break;
+                case 3:
                     System.out.println("\nIngrese su nombre de usuario:");
                     usuario = scanner.next();
 

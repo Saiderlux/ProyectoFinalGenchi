@@ -52,18 +52,18 @@ abstract class DarDeAlta {
                     } else {
 
                         System.out.println("Ingrese el nombre del " + tipoProducto + ":");
-                        String nombre = scanner.nextLine();
+                        String nombre = scanner.next();
+                        scanner.nextLine();
 
                         System.out.println("Ingrese la descripción del " + tipoProducto + ":");
-                        String descripcion = scanner.nextLine();
-
+                        String descripcion = scanner.next();
+                        scanner.nextLine();
+                        
                         System.out.println("Ingrese el precio del " + tipoProducto + ":");
                         double precio = scanner.nextDouble();
-                        scanner.nextLine(); // Consumir el salto de línea pendiente
 
                         System.out.println("Ingrese la cantidad del " + tipoProducto + ":");
                         int cantidad = scanner.nextInt();
-                        scanner.nextLine(); // Consumir el salto de línea pendiente
 
                         System.out.println("Ingrese " + procedencia + " del " + tipoProducto + ":");
                         String marca_lab = scanner.nextLine();
