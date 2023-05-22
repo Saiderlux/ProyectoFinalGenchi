@@ -56,8 +56,7 @@ abstract class DarDeAlta {
                         scanner.nextLine();
 
                         System.out.println("Ingrese la descripción del " + tipoProducto + ":");
-                        String descripcion = scanner.next();
-                        scanner.nextLine();
+                        String descripcion = scanner.nextLine();
                         
                         System.out.println("Ingrese el precio del " + tipoProducto + ":");
                         double precio = scanner.nextDouble();
@@ -66,8 +65,9 @@ abstract class DarDeAlta {
                         int cantidad = scanner.nextInt();
 
                         System.out.println("Ingrese " + procedencia + " del " + tipoProducto + ":");
-                        String marca_lab = scanner.nextLine();
-
+                        String marca_lab = scanner.next();
+                        scanner.nextLine();
+                        
                         if ("producto de higiene".equals(tipoProducto)) {
                             Higiene higiene = new Higiene(Integer.parseInt(id), nombre, descripcion, precio, cantidad, marca_lab);
                             String linea = "H" + higiene.getId() + "," + higiene.getNombre() + "," + higiene.getDescripcion() + ","

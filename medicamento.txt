@@ -1,1 +1,4 @@
 M12,Tacos,,12.0,12,No sé
+M1,Paracetamol,Quita,12.0,12,
+M23,Medicina,Desenferma,123.0,12,
+M7,Tacos,Quien sabe alchile,12.0,34,Tepito
