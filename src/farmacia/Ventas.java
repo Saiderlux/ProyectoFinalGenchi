@@ -6,6 +6,7 @@ package farmacia;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -68,6 +69,13 @@ public class Ventas {
 
             producto.setCantidad(producto.getCantidad() - cantidad);
             carrito.add(producto);
+            System.out.println("¿Desea editar la cantidad del producto agregado? (S/N):");
+            String opcionEditar = scanner.next();
+            scanner.nextLine();
+
+            if (opcionEditar.equalsIgnoreCase("S")) {
+                editarProductosCarrito(carrito);
+            }
 
             System.out.println("Producto agregado al carrito de compra.");
 
