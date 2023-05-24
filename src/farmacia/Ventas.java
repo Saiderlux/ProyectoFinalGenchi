@@ -68,6 +68,13 @@ public class Ventas {
 
             producto.setCantidad(producto.getCantidad() - cantidad);
             carrito.add(producto);
+            System.out.println("¿Desea editar la cantidad del producto agregado? (S/N):");
+            String opcionEditar = scanner.next();
+            scanner.nextLine();
+
+            if (opcionEditar.equalsIgnoreCase("S")) {
+                editarProductosCarrito(carrito);
+            }
 
             System.out.println("Producto agregado al carrito de compra.");
 
@@ -89,6 +96,7 @@ public class Ventas {
         generarTicketConsola(carrito, totalVenta, fecha, hora);
 
         System.out.println("***Venta finalizada. Gracias por su compra.***\n");
+        
     }
 
     private Medicamento buscarMedicamentoPorId(String id) {
@@ -269,4 +277,128 @@ public class Ventas {
         }
         System.out.println("Total: $" + totalVenta);
     }
+
+    public void editarProductosCarrito(List<Producto> carrito) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Carrito de Compra:");
+        mostrarProductosCarrito(carrito);
+
+        System.out.println("Ingrese el ID del producto a editar:");
+        int productId = scanner.nextInt();
+        scanner.nextLine();
+
+        Producto productoSeleccionado = null;
+        for (Producto producto : carrito) {
+            if (producto.getId() == productId) {
+                productoSeleccionado = producto;
+                break;
+            }
+        }
+
+        if (productoSeleccionado == null) {
+            System.out.println("No se encontró un producto con el ID ingresado.");
+            return;
+        }
+
+        System.out.println("Ingrese la nueva cantidad:");
+        int nuevaCantidad = scanner.nextInt();
+        scanner.nextLine();
+
+        if (nuevaCantidad > productoSeleccionado.getCantidad()) {
+            System.out.println("No hay suficientes unidades en inventario. Cantidad disponible: " + productoSeleccionado.getCantidad());
+            return;
+        }
+
+        if (productoSeleccionado.getCantidad() - nuevaCantidad < 10) {
+            System.out.println("Quedan muy pocas existencias del producto. Considere dar de alta más productos en el sistema.");
+        }
+
+        productoSeleccionado.setCantidad(nuevaCantidad);
+        System.out.println("Producto actualizado en el carrito de compra.");
+    }
+
+    public void cancelarCompra(List<Producto> carrito, double totalVenta, String fecha, String hora) {
+        try {
+            FileWriter writer = new FileWriter("compras_canceladas.txt", true);
+            BufferedWriter buffer = new BufferedWriter(writer);
+
+            int ventaId = obtenerSiguienteIdVenta(); // Obtener el siguiente ID de venta cancelada
+            String productosVendidos = obtenerProductosVendidos(carrito);
+            String lineaVenta = String.format("%d,%s,%.2f,%s,%s", ventaId, productosVendidos, totalVenta, fecha, hora);
+
+            buffer.write(lineaVenta);
+            buffer.newLine();
+
+            buffer.close();
+            writer.close();
+
+            System.out.println("Compra cancelada y guardada en el archivo de compras canceladas.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void mostrarProductosCarrito(List<Producto> carrito) {
+        if (carrito.isEmpty()) {
+            System.out.println("El carrito de compra está vacío.");
+            return;
+        }
+
+        System.out.println("Productos en el carrito de compra:");
+        System.out.println("----------------------------------");
+        System.out.printf("%-5s %-20s %-10s %-8s%n", "ID", "Nombre", "Precio", "Cantidad");
+        System.out.println("----------------------------------");
+
+        for (Producto producto : carrito) {
+            System.out.printf("%-5d %-20s %-10.2f %-8d%n",
+                    producto.getId(),
+                    producto.getNombre(),
+                    producto.getPrecio(),
+                    producto.getCantidad());
+        }
+
+        System.out.println("----------------------------------");
+    }
+
+    public void mostrarVentasPorFecha(String fecha) {
+        try {
+            FileReader fr = new FileReader(VENTAS_FILE);
+            BufferedReader br = new BufferedReader(fr);
+
+            String line;
+            boolean ventasEncontradas = false;
+
+            System.out.println("Ventas realizadas en la fecha " + fecha + ":");
+            while ((line = br.readLine()) != null) {
+                String[] attributes = line.split(",");
+                String ventaFecha = attributes[3];
+
+                if (ventaFecha.equals(fecha)) {
+                    int ventaId = Integer.parseInt(attributes[0]);
+                    String productosVendidos = attributes[1];
+                    double totalVenta = Double.parseDouble(attributes[2]);
+                    String ventaHora = attributes[4];
+
+                    System.out.println("Venta ID: " + ventaId);
+                    System.out.println("Productos Vendidos: " + productosVendidos);
+                    System.out.println("Total de Venta: $" + totalVenta);
+                    System.out.println("Hora: " + ventaHora);
+                    System.out.println("---------------------------------------");
+
+                    ventasEncontradas = true;
+                }
+            }
+
+            br.close();
+            fr.close();
+
+            if (!ventasEncontradas) {
+                System.out.println("No se encontraron ventas realizadas en la fecha " + fecha + ".");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
