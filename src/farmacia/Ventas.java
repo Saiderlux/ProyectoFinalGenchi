@@ -79,7 +79,9 @@ public class Ventas {
                 ventaActiva = false;
             }
         }
-
+        for (Producto producto : carrito) {
+            actualizarInventario(producto);
+        }
         double totalVenta = calcularTotalVenta(carrito);
         String fecha = obtenerFechaActual();
         String hora = obtenerHoraActual();
@@ -89,6 +91,7 @@ public class Ventas {
         generarTicketConsola(carrito, totalVenta, fecha, hora);
 
         System.out.println("***Venta finalizada. Gracias por su compra.***\n");
+
     }
 
     private Medicamento buscarMedicamentoPorId(String id) {
@@ -152,7 +155,8 @@ public class Ventas {
     private double calcularTotalVenta(List<Producto> carrito) {
         double total = 0.0;
         for (Producto producto : carrito) {
-            total += producto.getPrecio();
+            double precioTotalProducto = producto.getPrecio() * producto.getCantidad();
+            total += precioTotalProducto;
         }
         return total;
     }
@@ -243,7 +247,7 @@ public class Ventas {
             buffer.write("Productos:");
             buffer.newLine();
             for (Producto producto : carrito) {
-                buffer.write("- " + producto.getNombre());
+                buffer.write("- " + producto.getNombre() + " (" + producto.getCantidad() + " x $" + producto.getPrecio() + ")");
                 buffer.newLine();
             }
             buffer.newLine();
@@ -269,4 +273,49 @@ public class Ventas {
         }
         System.out.println("Total: $" + totalVenta);
     }
+
+    private void actualizarInventario(Producto producto) {
+        String archivo;
+        if (producto instanceof Medicamento) {
+            archivo = MEDICAMENTO_FILE;
+        } else {
+            archivo = HIGIENE_FILE;
+        }
+
+        try {
+            FileReader fr = new FileReader(archivo);
+            BufferedReader br = new BufferedReader(fr);
+
+            List<String> lineas = new ArrayList<>();
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] attributes = linea.split(",");
+                if (attributes[0].equals(producto.getId())) {
+                    int cantidadActual = Integer.parseInt(attributes[4]);
+                    int cantidadVendida = producto.getCantidad();
+                    int nuevaCantidad = cantidadActual - cantidadVendida;
+                    attributes[4] = String.valueOf(nuevaCantidad);
+                    linea = String.join(",", attributes);
+                }
+                lineas.add(linea);
+            }
+
+            br.close();
+            fr.close();
+
+            FileWriter fw = new FileWriter(archivo);
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            for (String lineaActualizada : lineas) {
+                bw.write(lineaActualizada);
+                bw.newLine();
+            }
+
+            bw.close();
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
