@@ -57,7 +57,8 @@ public class MenuOpciones {
                     }
                     break;
                 case 2:
-                    
+                    Ventas ventas = new Ventas();
+                    ventas.iniciarVenta();
                     break;
                 case 3:
                     System.out.println("\nIngrese su nombre de usuario:");

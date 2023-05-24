@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException, ParseException {
         MenuOpciones opciones = new MenuOpciones();
-
         opciones.MenuGlobal();
+        
     }
 }
