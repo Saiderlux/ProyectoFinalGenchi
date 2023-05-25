@@ -18,10 +18,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- *
- * @author Ssaid
- */
 public class Ventas {
 
     private static final String MEDICAMENTO_FILE = "medicamento.txt";
@@ -29,11 +25,14 @@ public class Ventas {
     private static final String VENTAS_FILE = "ventas.txt";
     private static final String TICKET_FILE = "FarmaciaAmor.pdf";
 
+
+
     public void iniciarVenta() throws ParseException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Bienvenido a Farmacia Amor");
         System.out.println("============================");
-
+        int cantidad = 0;
+        Producto producto = null;
         boolean ventaActiva = true;
         List<Producto> carrito = new ArrayList<>();
 
@@ -42,7 +41,7 @@ public class Ventas {
             String id = scanner.next();
             scanner.nextLine();
 
-            Producto producto = null;
+            
             if (id.startsWith("M")) {
                 producto = buscarMedicamentoPorId(id);
             } else if (id.startsWith("H")) {
@@ -55,7 +54,7 @@ public class Ventas {
             }
 
             System.out.println("Ingrese la cantidad a vender:");
-            int cantidad = scanner.nextInt();
+            cantidad = scanner.nextInt();
             scanner.nextLine();
 
             if (cantidad > producto.getCantidad()) {
@@ -69,13 +68,6 @@ public class Ventas {
 
             producto.setCantidad(producto.getCantidad() - cantidad);
             carrito.add(producto);
-            System.out.println("¿Desea editar la cantidad del producto agregado? (S/N):");
-            String opcionEditar = scanner.next();
-            scanner.nextLine();
-
-            if (opcionEditar.equalsIgnoreCase("S")) {
-                editarProductosCarrito(carrito);
-            }
 
             System.out.println("Producto agregado al carrito de compra.");
 
@@ -87,19 +79,15 @@ public class Ventas {
                 ventaActiva = false;
             }
         }
-        for (Producto producto : carrito) {
-            actualizarInventario(producto);
-        }
-        double totalVenta = calcularTotalVenta(carrito);
+
+        double totalVenta = calcularTotalVenta(carrito,cantidad);
         String fecha = obtenerFechaActual();
         String hora = obtenerHoraActual();
 
         guardarVenta(carrito, totalVenta, fecha, hora);
-        generarTicket(carrito, totalVenta, fecha, hora);
-        generarTicketConsola(carrito, totalVenta, fecha, hora);
+        generarTicket(carrito, totalVenta, fecha, hora,cantidad,producto.getPrecio());
 
-        System.out.println("***Venta finalizada. Gracias por su compra.***\n");
-
+        System.out.println("Venta finalizada. Gracias por su compra.");
     }
 
     private Medicamento buscarMedicamentoPorId(String id) {
@@ -160,11 +148,10 @@ public class Ventas {
         return null;
     }
 
-    private double calcularTotalVenta(List<Producto> carrito) {
+    private double calcularTotalVenta(List<Producto> carrito, int cantidad) {
         double total = 0.0;
         for (Producto producto : carrito) {
-            double precioTotalProducto = producto.getPrecio() * producto.getCantidad();
-            total += precioTotalProducto;
+            total += producto.getPrecio()*cantidad;
         }
         return total;
     }
@@ -237,7 +224,7 @@ public class Ventas {
         return productosVendidos.toString();
     }
 
-    private void generarTicket(List<Producto> carrito, double totalVenta, String fecha, String hora) {
+    private void generarTicket(List<Producto> carrito, double totalVenta, String fecha, String hora,int cantidad, double precio) {
         try {
             FileWriter writer = new FileWriter(TICKET_FILE);
             BufferedWriter buffer = new BufferedWriter(writer);
@@ -255,7 +242,7 @@ public class Ventas {
             buffer.write("Productos:");
             buffer.newLine();
             for (Producto producto : carrito) {
-                buffer.write("- " + producto.getNombre() + " (" + producto.getCantidad() + " x $" + producto.getPrecio() + ")");
+                buffer.write("- " + producto.getNombre() + "(" +cantidad +"x"+precio+")");
                 buffer.newLine();
             }
             buffer.newLine();
@@ -268,62 +255,4 @@ public class Ventas {
             e.printStackTrace();
         }
     }
-
-    private void generarTicketConsola(List<Producto> carrito, double totalVenta, String fecha, String hora) {
-        System.out.println("Farmacia Amor - Ticket de Venta");
-        System.out.println("================================");
-        System.out.println("Fecha: " + fecha);
-        System.out.println("Hora: " + hora);
-        System.out.println("Productos:");
-        for (Producto producto : carrito) {
-            System.out.println("- " + producto.getNombre());
-
-        }
-        System.out.println("Total: $" + totalVenta);
-    }
-
-    private void actualizarInventario(Producto producto) {
-        String archivo;
-        if (producto instanceof Medicamento) {
-            archivo = MEDICAMENTO_FILE;
-        } else {
-            archivo = HIGIENE_FILE;
-        }
-
-        try {
-            FileReader fr = new FileReader(archivo);
-            BufferedReader br = new BufferedReader(fr);
-
-            List<String> lineas = new ArrayList<>();
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                String[] attributes = linea.split(",");
-                if (attributes[0].equals(producto.getId())) {
-                    int cantidadActual = Integer.parseInt(attributes[4]);
-                    int cantidadVendida = producto.getCantidad();
-                    int nuevaCantidad = cantidadActual - cantidadVendida;
-                    attributes[4] = String.valueOf(nuevaCantidad);
-                    linea = String.join(",", attributes);
-                }
-                lineas.add(linea);
-            }
-
-            br.close();
-            fr.close();
-
-            FileWriter fw = new FileWriter(archivo);
-            BufferedWriter bw = new BufferedWriter(fw);
-
-            for (String lineaActualizada : lineas) {
-                bw.write(lineaActualizada);
-                bw.newLine();
-            }
-
-            bw.close();
-            fw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
