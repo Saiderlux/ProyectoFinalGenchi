@@ -33,7 +33,7 @@ abstract class Consultar {
         try {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Ingrese el ID del " + tipoProducto + " a consultar: ");
-            String idAConsultar = scanner.next();
+            String idAConsultar = scanner.nextLine();
 
             FileReader reader = new FileReader(archivo);
             BufferedReader buffer = new BufferedReader(reader);
@@ -42,7 +42,7 @@ abstract class Consultar {
             while ((linea = buffer.readLine()) != null) {
                 String[] partes = linea.split(",");
                 String id = partes[0];
-                if (id == idAConsultar) {
+                if (id.equalsIgnoreCase(idAConsultar)) {
                     seEncontro = true;
                     System.out.println("ID: " + partes[0]);
                     System.out.println("Nombre: " + partes[1]);

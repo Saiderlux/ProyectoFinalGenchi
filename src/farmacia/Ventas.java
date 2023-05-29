@@ -81,7 +81,7 @@ public class Ventas {
         double totalVenta = calcularTotalVenta(carrito, cantidad);
         String fecha = obtenerFechaActual();
         String hora = obtenerHoraActual();
-
+        actualizarCantidadProductos(carrito);
         guardarVenta(carrito, totalVenta, fecha, hora);
         generarTicket(carrito, totalVenta, fecha, hora, cantidad, producto.getPrecio());
 

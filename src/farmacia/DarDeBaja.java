@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Scanner;
 
 /**
@@ -40,7 +42,7 @@ abstract class DarDeBaja {
             while ((linea = buffer.readLine()) != null) {
                 String[] partes = linea.split(",");
                 String id = partes[0];
-                if (id == idADarDeBaja) {
+                if (id.equalsIgnoreCase(idADarDeBaja)) {
                     seElimino = true;
                     continue;
                 }
@@ -53,8 +55,11 @@ abstract class DarDeBaja {
                 System.out.println("No se encontró el " + tipoProducto + " con ID " + idADarDeBaja);
                 return;
             }
-            archivoViejo.delete();
-            archivoNuevo.renameTo(archivoViejo);
+            // Copiar el contenido del archivo temporal al archivo original
+            Files.copy(archivoNuevo.toPath(), archivoViejo.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            // Eliminar el archivo temporal
+            archivoNuevo.delete();
             System.out.println("El " + tipoProducto + " se ha dado de baja exitosamente");
         } catch (IOException e) {
             System.out.println("Error al dar de baja el " + tipoProducto);

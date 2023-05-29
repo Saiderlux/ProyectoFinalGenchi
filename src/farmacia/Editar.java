@@ -49,7 +49,7 @@ abstract class Editar {
                 while ((linea = buffer.readLine()) != null) {
                     String[] partes = linea.split(",");
                     String id = partes[0];
-                    if (id == idAEditar) {
+                    if (id.equalsIgnoreCase(idAEditar)) {
                         int opcion = 0;
                         do {
                             System.out.println("Seleccione la opción que desea editar:");
