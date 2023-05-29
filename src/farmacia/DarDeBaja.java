@@ -28,8 +28,7 @@ abstract class DarDeBaja {
         try {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Ingrese el ID del medicamento a dar de baja: ");
-            int idADarDeBaja = scanner.nextInt();
-            scanner.nextLine();
+            String idADarDeBaja = scanner.next();
             File archivoViejo = new File(archivo);
             File archivoNuevo = new File(archivoTmp);
             FileReader reader = new FileReader(archivoViejo);
@@ -40,7 +39,7 @@ abstract class DarDeBaja {
             boolean seElimino = false;
             while ((linea = buffer.readLine()) != null) {
                 String[] partes = linea.split(",");
-                int id = Integer.parseInt(partes[0]);
+                String id = partes[0];
                 if (id == idADarDeBaja) {
                     seElimino = true;
                     continue;

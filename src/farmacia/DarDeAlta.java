@@ -69,13 +69,13 @@ abstract class DarDeAlta {
                         scanner.nextLine();
                         
                         if ("producto de higiene".equals(tipoProducto)) {
-                            Higiene higiene = new Higiene(Integer.parseInt(id), nombre, descripcion, precio, cantidad, marca_lab);
+                            Higiene higiene = new Higiene(id, nombre, descripcion, precio, cantidad, marca_lab);
                             String linea = "H" + higiene.getId() + "," + higiene.getNombre() + "," + higiene.getDescripcion() + ","
                                     + higiene.getPrecio() + "," + higiene.getCantidad() + "," + higiene.getMarca();
                             buffer.write(linea);
                             buffer.newLine();
                         } else if ("medicamento".equals(tipoProducto)) {
-                            Medicamento medicamento = new Medicamento(Integer.parseInt(id), nombre, descripcion, precio, cantidad, marca_lab);
+                            Medicamento medicamento = new Medicamento(id, nombre, descripcion, precio, cantidad, marca_lab);
                             String linea = "M" + medicamento.getId() + "," + medicamento.getNombre() + "," + medicamento.getDescripcion() + ","
                                     + medicamento.getPrecio() + "," + medicamento.getCantidad() + "," + medicamento.getLaboratorio();
                             buffer.write(linea);

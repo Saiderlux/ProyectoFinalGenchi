@@ -8,14 +8,14 @@ package farmacia;
 
 class Producto {
 
-    private int id;
+    private String id;
     private String nombre;
     private String descripcion;
     private double precio;
     private int cantidad;
    
 
-    public Producto(int id, String nombre, String descripcion, double precio, int cantidad){
+    public Producto(String id, String nombre, String descripcion, double precio, int cantidad){
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -24,11 +24,11 @@ class Producto {
       
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

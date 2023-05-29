@@ -32,16 +32,16 @@ abstract class Consultar {
     public void Consultar() {
         try {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Ingrese el ID del "+tipoProducto+" a consultar: ");
-            int idAConsultar = scanner.nextInt();
-            scanner.nextLine();
+            System.out.println("Ingrese el ID del " + tipoProducto + " a consultar: ");
+            String idAConsultar = scanner.next();
+
             FileReader reader = new FileReader(archivo);
             BufferedReader buffer = new BufferedReader(reader);
             String linea = "";
             boolean seEncontro = false;
             while ((linea = buffer.readLine()) != null) {
                 String[] partes = linea.split(",");
-                int id = Integer.parseInt(partes[0]);
+                String id = partes[0];
                 if (id == idAConsultar) {
                     seEncontro = true;
                     System.out.println("ID: " + partes[0]);
@@ -56,10 +56,10 @@ abstract class Consultar {
             }
             buffer.close();
             if (!seEncontro) {
-                System.out.println("No se encontró el "+tipoProducto+"o con ID " + idAConsultar);
+                System.out.println("No se encontró el " + tipoProducto + "o con ID " + idAConsultar);
             }
         } catch (IOException e) {
-            System.out.println("Error al consultar el "+tipoProducto);
+            System.out.println("Error al consultar el " + tipoProducto);
         }
     }
 }

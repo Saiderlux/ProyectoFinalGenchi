@@ -6,6 +6,7 @@ package farmacia;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -25,8 +26,6 @@ public class Ventas {
     private static final String VENTAS_FILE = "ventas.txt";
     private static final String TICKET_FILE = "FarmaciaAmor.pdf";
 
-
-
     public void iniciarVenta() throws ParseException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Bienvenido a Farmacia Amor");
@@ -41,7 +40,6 @@ public class Ventas {
             String id = scanner.next();
             scanner.nextLine();
 
-            
             if (id.startsWith("M")) {
                 producto = buscarMedicamentoPorId(id);
             } else if (id.startsWith("H")) {
@@ -80,12 +78,12 @@ public class Ventas {
             }
         }
 
-        double totalVenta = calcularTotalVenta(carrito,cantidad);
+        double totalVenta = calcularTotalVenta(carrito, cantidad);
         String fecha = obtenerFechaActual();
         String hora = obtenerHoraActual();
 
         guardarVenta(carrito, totalVenta, fecha, hora);
-        generarTicket(carrito, totalVenta, fecha, hora,cantidad,producto.getPrecio());
+        generarTicket(carrito, totalVenta, fecha, hora, cantidad, producto.getPrecio());
 
         System.out.println("Venta finalizada. Gracias por su compra.");
     }
@@ -99,7 +97,7 @@ public class Ventas {
             while ((line = br.readLine()) != null) {
                 String[] attributes = line.split(",");
                 if (attributes[0].equals(id)) {
-                    int productId = Integer.parseInt(attributes[0].substring(1));
+                    String productId = attributes[0].substring(1);
                     String productName = attributes[1];
                     String productDescription = attributes[2];
                     double productPrice = Double.parseDouble(attributes[3]);
@@ -128,7 +126,7 @@ public class Ventas {
             while ((line = br.readLine()) != null) {
                 String[] attributes = line.split(",");
                 if (attributes[0].equals(id)) {
-                    int productId = Integer.parseInt(attributes[0].substring(1));
+                    String productId = attributes[0].substring(1);
                     String productName = attributes[1];
                     String productDescription = attributes[2];
                     double productPrice = Double.parseDouble(attributes[3]);
@@ -151,7 +149,7 @@ public class Ventas {
     private double calcularTotalVenta(List<Producto> carrito, int cantidad) {
         double total = 0.0;
         for (Producto producto : carrito) {
-            total += producto.getPrecio()*cantidad;
+            total += producto.getPrecio() * cantidad;
         }
         return total;
     }
@@ -224,7 +222,7 @@ public class Ventas {
         return productosVendidos.toString();
     }
 
-    private void generarTicket(List<Producto> carrito, double totalVenta, String fecha, String hora,int cantidad, double precio) {
+    private void generarTicket(List<Producto> carrito, double totalVenta, String fecha, String hora, int cantidad, double precio) {
         try {
             FileWriter writer = new FileWriter(TICKET_FILE);
             BufferedWriter buffer = new BufferedWriter(writer);
@@ -242,7 +240,7 @@ public class Ventas {
             buffer.write("Productos:");
             buffer.newLine();
             for (Producto producto : carrito) {
-                buffer.write("- " + producto.getNombre() + "(" +cantidad +"x"+precio+")");
+                buffer.write("- " + producto.getNombre() + "(" + cantidad + "x" + precio + ")");
                 buffer.newLine();
             }
             buffer.newLine();
@@ -251,6 +249,95 @@ public class Ventas {
 
             buffer.close();
             writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void actualizarCantidadProductos(List<Producto> carrito) {
+        try {
+            File medicamentoFile = new File(MEDICAMENTO_FILE);
+            File higieneFile = new File(HIGIENE_FILE);
+
+            List<String> newLines = new ArrayList<>();
+
+            // Actualizar la cantidad de medicamentos
+            if (medicamentoFile.exists()) {
+                FileReader fr = new FileReader(medicamentoFile);
+                BufferedReader br = new BufferedReader(fr);
+
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] attributes = line.split(",");
+                    String productId = attributes[0];
+                    int productQuantity = Integer.parseInt(attributes[4]);
+
+                    for (Producto producto : carrito) {
+                        if (producto instanceof Medicamento && producto.getId().equals(productId)) {
+                            productQuantity -= producto.getCantidad();
+                            break;
+                        }
+                    }
+
+                    String updatedLine = String.format("%s,%s", line, productQuantity);
+                    newLines.add(updatedLine);
+                }
+
+                br.close();
+                fr.close();
+
+                // Guardar los cambios en el archivo
+                FileWriter fw = new FileWriter(medicamentoFile);
+                BufferedWriter bw = new BufferedWriter(fw);
+
+                for (String newLine : newLines) {
+                    bw.write(newLine);
+                    bw.newLine();
+                }
+
+                bw.close();
+                fw.close();
+            }
+
+            newLines.clear();
+
+            // Actualizar la cantidad de productos de higiene
+            if (higieneFile.exists()) {
+                FileReader fr = new FileReader(higieneFile);
+                BufferedReader br = new BufferedReader(fr);
+
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] attributes = line.split(",");
+                    String productId = attributes[0];
+                    int productQuantity = Integer.parseInt(attributes[4]);
+
+                    for (Producto producto : carrito) {
+                        if (producto instanceof Higiene && producto.getId().equals(productId)) {
+                            productQuantity -= producto.getCantidad();
+                            break;
+                        }
+                    }
+
+                    String updatedLine = String.format("%s,%s", line, productQuantity);
+                    newLines.add(updatedLine);
+                }
+
+                br.close();
+                fr.close();
+
+                // Guardar los cambios en el archivo
+                FileWriter fw = new FileWriter(higieneFile);
+                BufferedWriter bw = new BufferedWriter(fw);
+
+                for (String newLine : newLines) {
+                    bw.write(newLine);
+                    bw.newLine();
+                }
+
+                bw.close();
+                fw.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
