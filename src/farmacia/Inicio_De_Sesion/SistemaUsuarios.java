@@ -37,8 +37,8 @@ public class SistemaUsuarios {
             }
 
             PrintWriter administradoresWriter;
-            try (PrintWriter trabajadoresWriter = new PrintWriter(new FileWriter(trabajadoresFile))) {
-                administradoresWriter = new PrintWriter(new FileWriter(administradoresFile));
+            try (PrintWriter trabajadoresWriter = new PrintWriter(new FileWriter(trabajadoresFile, true))) {
+                administradoresWriter = new PrintWriter(new FileWriter(administradoresFile, true));
                 for (Usuario usuario : usuarios) {
                     if (usuario instanceof Trabajador) {
                         trabajadoresWriter.println(usuario.getNombre() + "," + usuario.getPassword());
@@ -52,8 +52,8 @@ public class SistemaUsuarios {
             System.out.println("Error al guardar los usuarios");
         }
     }
-
 // Método para agregar un usuario al sistema
+
     public void agregarUsuario(Usuario usuario) {
         usuarios.add(usuario);
     }
@@ -101,16 +101,22 @@ public class SistemaUsuarios {
                 System.out.println("No se encontró el trabajador con nombre de usuario: " + nombre);
                 return;
             }
-
-            archivoViejo.delete();
-            File archivoNuevo = new File("trabajadores.txt");
-            archivoNuevo.delete();
-            new File("trabajadores.tmp").renameTo(archivoNuevo);
-            System.out.println("El trabajador se ha dado de baja exitosamente");
         } catch (FileNotFoundException e) {
             System.out.println("Error: no se encontró el archivo de trabajadores.");
+            return;
         } catch (IOException e) {
             System.out.println("Error al dar de baja al trabajador.");
+            return;
+        }
+
+        // Cerrar y eliminar los archivos
+        try {
+            archivoViejo.delete();
+            File archivoNuevo = new File("trabajadores.txt");
+            new File("trabajadores.tmp").renameTo(archivoNuevo);
+            System.out.println("El trabajador se ha dado de baja exitosamente");
+        } catch (Exception e) {
+            System.out.println("Error al eliminar el archivo antiguo o renombrar el archivo nuevo.");
         }
     }
 }

@@ -1,6 +1,6 @@
-M12,Tacos,,12.0,12,No sé
-M23,Medicina,Desenferma,123.0,12
-M7,Tacos,Quien sabe alchile,12.0,34,Tepito
-M2,Paracetamol,Quita el dolor,34.0,50,Torricelli
-M34,Tacos,Amigooos,40.0,20,yo
-M6,Ibuprofeno,Quita el dolor,45.0,100,Tacos
+M12,Tacos,,12.0,12,No sé,12,12,12,12,12
+M23,Medicina,Desenferma,123.0,12,12,12,12,12,12
+M7,Tacos,Quien sabe alchile,12.0,34,Tepito,34,34,34,34,34
+M2,Paracetamol,Quita el dolor,34.0,50,Torricelli,50,50,50,50,50
+M34,Tacos,Amigooos,40.0,20,yo,20,20,20,20,20
+M6,Ibuprofeno,Quita el dolor,45.0,100,Tacos,100,100,100,100,100

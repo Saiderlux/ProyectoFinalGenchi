@@ -15,6 +15,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -214,7 +215,13 @@ public class Ventas {
         StringBuilder productosVendidos = new StringBuilder();
         for (int i = 0; i < carrito.size(); i++) {
             Producto producto = carrito.get(i);
-            productosVendidos.append(producto.getId());
+            String productId = producto.getId();
+            if (producto instanceof Medicamento) {
+                productId = "M" + productId;
+            } else if (producto instanceof Higiene) {
+                productId = "H" + productId;
+            }
+            productosVendidos.append(productId);
             if (i < carrito.size() - 1) {
                 productosVendidos.append("|");
             }
@@ -259,7 +266,8 @@ public class Ventas {
             File medicamentoFile = new File(MEDICAMENTO_FILE);
             File higieneFile = new File(HIGIENE_FILE);
 
-            List<String> newLines = new ArrayList<>();
+            List<String> newLinesMedicamento = new ArrayList<>();
+            List<String> newLinesHigiene = new ArrayList<>();
 
             // Actualizar la cantidad de medicamentos
             if (medicamentoFile.exists()) {
@@ -269,37 +277,30 @@ public class Ventas {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] attributes = line.split(",");
-                    String productId = attributes[0];
-                    int productQuantity = Integer.parseInt(attributes[4]);
+                    if (attributes.length >= 5) {
+                        String productId = attributes[0];
+                        int productQuantity = Integer.parseInt(attributes[4]);
 
-                    for (Producto producto : carrito) {
-                        if (producto instanceof Medicamento && producto.getId().equals(productId)) {
-                            productQuantity -= producto.getCantidad();
-                            break;
+                        for (Producto producto : carrito) {
+                            if (producto instanceof Medicamento && producto.getId().equals(productId)) {
+                                productQuantity -= producto.getCantidad();
+                                break;
+                            }
                         }
-                    }
 
-                    String updatedLine = String.format("%s,%s", line, productQuantity);
-                    newLines.add(updatedLine);
+                        String[] updatedAttributes = Arrays.copyOf(attributes, attributes.length);
+                        updatedAttributes[4] = String.valueOf(productQuantity);
+                        String updatedLine = String.join(",", updatedAttributes);
+                        newLinesMedicamento.add(updatedLine);
+                    } else {
+                        // Manejar el caso en el que el registro no tiene los atributos esperados
+                        System.out.println("El registro de medicamento no tiene los atributos esperados");
+                    }
                 }
 
                 br.close();
                 fr.close();
-
-                // Guardar los cambios en el archivo
-                FileWriter fw = new FileWriter(medicamentoFile);
-                BufferedWriter bw = new BufferedWriter(fw);
-
-                for (String newLine : newLines) {
-                    bw.write(newLine);
-                    bw.newLine();
-                }
-
-                bw.close();
-                fw.close();
             }
-
-            newLines.clear();
 
             // Actualizar la cantidad de productos de higiene
             if (higieneFile.exists()) {
@@ -309,35 +310,54 @@ public class Ventas {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] attributes = line.split(",");
-                    String productId = attributes[0];
-                    int productQuantity = Integer.parseInt(attributes[4]);
+                    if (attributes.length >= 5) {
+                        String productId = attributes[0];
+                        int productQuantity = Integer.parseInt(attributes[4]);
 
-                    for (Producto producto : carrito) {
-                        if (producto instanceof Higiene && producto.getId().equals(productId)) {
-                            productQuantity -= producto.getCantidad();
-                            break;
+                        for (Producto producto : carrito) {
+                            if (producto instanceof Higiene && producto.getId().equals(productId)) {
+                                productQuantity -= producto.getCantidad();
+                                break;
+                            }
                         }
-                    }
 
-                    String updatedLine = String.format("%s,%s", line, productQuantity);
-                    newLines.add(updatedLine);
+                        String[] updatedAttributes = Arrays.copyOf(attributes, attributes.length);
+                        updatedAttributes[4] = String.valueOf(productQuantity);
+                        String updatedLine = String.join(",", updatedAttributes);
+                        newLinesHigiene.add(updatedLine);
+                    } else {
+                        // Manejar el caso en el que el registro no tiene los atributos esperados
+                        System.out.println("El registro de producto de higiene no tiene los atributos esperados");
+                    }
                 }
 
                 br.close();
                 fr.close();
-
-                // Guardar los cambios en el archivo
-                FileWriter fw = new FileWriter(higieneFile);
-                BufferedWriter bw = new BufferedWriter(fw);
-
-                for (String newLine : newLines) {
-                    bw.write(newLine);
-                    bw.newLine();
-                }
-
-                bw.close();
-                fw.close();
             }
+
+            // Guardar los cambios en los archivos
+            FileWriter fwMedicamento = new FileWriter(medicamentoFile);
+            BufferedWriter bwMedicamento = new BufferedWriter(fwMedicamento);
+
+            for (String newLine : newLinesMedicamento) {
+                bwMedicamento.write(newLine);
+                bwMedicamento.newLine();
+            }
+
+            bwMedicamento.close();
+            fwMedicamento.close();
+
+            FileWriter fwHigiene = new FileWriter(higieneFile);
+            BufferedWriter bwHigiene = new BufferedWriter(fwHigiene);
+
+            for (String newLine : newLinesHigiene) {
+                bwHigiene.write(newLine);
+                bwHigiene.newLine();
+            }
+
+            bwHigiene.close();
+            fwHigiene.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
