@@ -87,7 +87,7 @@ public class Ventas {
         String hora = obtenerHoraActual();
 
         guardarVenta(carrito, totalVenta, fecha, hora);
-        actualizarCantidadProductos(carrito);
+        actualizarCantidadProductos(carrito, cantidad);
         generarTicket(carrito, totalVenta, fecha, hora, cantidad, producto.getPrecio());
 
         System.out.println("Venta finalizada. Gracias por su compra.");
@@ -294,20 +294,20 @@ public class Ventas {
         }
     }
 
-    private void actualizarCantidadProductos(List<Producto> carrito) {
+    private void actualizarCantidadProductos(List<Producto> carrito, int cantidad) {
         for (Producto producto : carrito) {
             if (producto instanceof Medicamento) {
-                actualizarCantidadMedicamento((Medicamento) producto);
+                actualizarCantidadMedicamento((Medicamento) producto, cantidad);
             } else if (producto instanceof Higiene) {
-                actualizarCantidadHigiene((Higiene) producto);
+                actualizarCantidadHigiene((Higiene) producto, cantidad);
             }
         }
     }
 
-    private void actualizarCantidadMedicamento(Medicamento medicamento) {
+    private void actualizarCantidadMedicamento(Medicamento medicamento, int cantidad) {
         try {
             File archivo = new File(MEDICAMENTO_FILE);
-            File archivoTemporal = new File("temp_medicamento.txt");
+            File archivoTemporal = new File("temp_medicamento.tmp");
 
             FileReader fr = new FileReader(archivo);
             BufferedReader br = new BufferedReader(fr);
@@ -319,15 +319,15 @@ public class Ventas {
             while ((line = br.readLine()) != null) {
                 String[] attributes = line.split(",");
                 String id = attributes[0];
-                int cantidad = Integer.parseInt(attributes[4]);
+                int cantidadFinal = Integer.parseInt(attributes[4]);
 
                 if (id.equals("M" + medicamento.getId())) {
-                    cantidad -= medicamento.getCantidad();
-                    if (cantidad < 0) {
-                        cantidad = 0;
+                    cantidadFinal -= cantidad;
+                    if (cantidadFinal < 0) {
+                        cantidadFinal = 0;
                     }
                     line = String.format("%s,%s,%s,%.2f,%d,%s,%s", id, medicamento.getNombre(), medicamento.getDescripcion(),
-                            medicamento.getPrecio(), cantidad, medicamento.getLaboratorio(),
+                            medicamento.getPrecio(), cantidadFinal, medicamento.getLaboratorio(),
                             medicamento.getForma_Farmaceutica());
                 }
                 bw.write(line);
@@ -353,10 +353,10 @@ public class Ventas {
         }
     }
 
-    private void actualizarCantidadHigiene(Higiene higiene) {
+    private void actualizarCantidadHigiene(Higiene higiene, int cantidad) {
         try {
             File archivo = new File(HIGIENE_FILE);
-            File archivoTemporal = new File("temp_higiene.txt");
+            File archivoTemporal = new File("temp_higiene.tmp");
 
             FileReader fr = new FileReader(archivo);
             BufferedReader br = new BufferedReader(fr);
@@ -368,15 +368,15 @@ public class Ventas {
             while ((line = br.readLine()) != null) {
                 String[] attributes = line.split(",");
                 String id = attributes[0];
-                int cantidad = Integer.parseInt(attributes[4]);
+                int cantidadFinal = Integer.parseInt(attributes[4]);
 
                 if (id.equals("H" + higiene.getId())) {
-                    cantidad -= higiene.getCantidad();
-                    if (cantidad < 0) {
-                        cantidad = 0;
+                    cantidadFinal -= cantidad;
+                    if (cantidadFinal < 0) {
+                        cantidadFinal = 0;
                     }
                     line = String.format("%s,%s,%s,%.2f,%d,%s", id, higiene.getNombre(), higiene.getDescripcion(),
-                            higiene.getPrecio(), cantidad, higiene.getMarca());
+                            higiene.getPrecio(), cantidadFinal, higiene.getMarca());
                 }
                 bw.write(line);
                 bw.newLine();

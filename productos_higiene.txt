@@ -1,1 +1,1 @@
-H1,Palmolive,Shampoo quita lo prieto,70.0,100,Pantene
+H1,Palmolive,Shampoo quita lo prieto,70.00,10,Pantene
