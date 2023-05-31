@@ -57,7 +57,7 @@ abstract class DarDeAlta {
 
                         System.out.println("Ingrese la descripción del " + tipoProducto + ":");
                         String descripcion = scanner.nextLine();
-                        
+
                         System.out.println("Ingrese el precio del " + tipoProducto + ":");
                         double precio = scanner.nextDouble();
 
@@ -66,8 +66,8 @@ abstract class DarDeAlta {
 
                         System.out.println("Ingrese " + procedencia + " del " + tipoProducto + ":");
                         String marca_lab = scanner.next();
-                        scanner.nextLine();
                         
+
                         if ("producto de higiene".equals(tipoProducto)) {
                             Higiene higiene = new Higiene(id, nombre, descripcion, precio, cantidad, marca_lab);
                             String linea = "H" + higiene.getId() + "," + higiene.getNombre() + "," + higiene.getDescripcion() + ","
@@ -75,9 +75,13 @@ abstract class DarDeAlta {
                             buffer.write(linea);
                             buffer.newLine();
                         } else if ("medicamento".equals(tipoProducto)) {
-                            Medicamento medicamento = new Medicamento(id, nombre, descripcion, precio, cantidad, marca_lab);
+                            System.out.println("Ingrese la forma farmaceutica del " + tipoProducto + ":");
+                            String forma_Farmaceutica = scanner.next();
+                            scanner.nextLine();
+
+                            Medicamento medicamento = new Medicamento(id, nombre, descripcion, precio, cantidad, marca_lab, forma_Farmaceutica);
                             String linea = "M" + medicamento.getId() + "," + medicamento.getNombre() + "," + medicamento.getDescripcion() + ","
-                                    + medicamento.getPrecio() + "," + medicamento.getCantidad() + "," + medicamento.getLaboratorio();
+                                    + medicamento.getPrecio() + "," + medicamento.getCantidad() + "," + medicamento.getLaboratorio() + "," + medicamento.getForma_Farmaceutica();
                             buffer.write(linea);
                             buffer.newLine();
                         }

@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Scanner;
 
+import java.util.Scanner;
+
 public class MenuOpciones {
 
     Scanner scanner = new Scanner(System.in);
@@ -37,9 +39,9 @@ public class MenuOpciones {
         while (true) {
 
             System.out.println("Bienvenido ¿Que deseas realizar?(Seleccione una opcion)");
-            System.out.println("1. Iniciar el sistema.");
-            System.out.println("2. Sistema de ventas");
-            System.out.println("3.Dar de alta nuevos usuarios (SE REQUIERE CUENTA DE ADMINISTRADOR)");
+            System.out.println("1. Ingresar al sistema de inventario");
+            System.out.println("2. Ingresar al sistema de ventas");
+            System.out.println("3. Dar de alta nuevos usuarios (SE REQUIERE CUENTA DE ADMINISTRADOR)");
             opcion = scanner.nextInt();
             switch (opcion) {
                 case 1:
@@ -101,11 +103,11 @@ public class MenuOpciones {
         int opcion = 0;
 
         while (opcion != 3) {
-            System.out.println("\n---BIENVENIDO AL SISTEMA DE FARMACIA EL SOL---\n");
+            System.out.println("\n---BIENVENIDO AL SISTEMA DE FARMACIA AMOR---\n");
             System.out.println("Seleccione una opcion: ");
             System.out.println("1. Acciones de medicamentos");
             System.out.println("2. Acciones de productos de higiene");
-            System.out.println("3. Salir\n");
+            System.out.println("3. Volver al inicio\n");
             opcion = scanner.nextInt();
             scanner.nextLine();
             switch (opcion) {
@@ -192,7 +194,7 @@ public class MenuOpciones {
                     }
                     break;
                 case 3:
-                    System.exit(0);
+                    System.out.println("\nVolviendo al inicio...\n");
                     break;
                 default:
                     System.out.println("Opción inválida");
@@ -209,7 +211,7 @@ public class MenuOpciones {
 
         while (opcion != 4) {
             System.out.println("\nMenú de opciones:");
-            System.out.println("1. Dar de alta un administrador");
+            System.out.println("1. Cambiar al administrador del sistema");
             System.out.println("2. Dar de alta un trabajador");
             System.out.println("3. Dar de baja un trabajador");
             System.out.println("4. Volver al inicio");

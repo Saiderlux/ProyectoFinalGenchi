@@ -33,7 +33,7 @@ abstract class Editar {
     public void Editar() {
         try {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Ingrese el ID del medicamento a editar: ");
+            System.out.println("Ingrese el ID del " + tipoProducto + " a editar: ");
             String idAEditar = scanner.next();
 
             File archivoViejo = new File(archivo);
@@ -57,9 +57,11 @@ abstract class Editar {
                             System.out.println("2. Descripción");
                             System.out.println("3. Precio");
                             System.out.println("4. Cantidad");
-                            System.out.println("5. Fecha de caducidad");
-                            System.out.println("6. " + procedencia);
-                            System.out.println("7. Salir");
+                            System.out.println("5. " + procedencia);
+                            if (tipoProducto.equals("medicamento")) {
+                                System.out.println("6. Forma Farmaceutica ");
+                            }
+                            System.out.println("0. Salir");
                             opcion = scanner.nextInt();
                             scanner.nextLine();
                             switch (opcion) {
@@ -86,22 +88,27 @@ abstract class Editar {
                                     partes[4] = Integer.toString(cantidadNueva);
                                     break;
                                 case 5:
-                                    System.out.println("Ingrese la nueva fecha de caducidad del " + tipoProducto + " (en formato dd/mm/yyyy):");
-                                    String fechaNueva = scanner.nextLine();
-                                    partes[5] = fechaNueva;
+                                    System.out.println("Ingrese el nuevo " + procedencia + " del " + tipoProducto + ":");
+                                    String laboratorioNuevo = scanner.nextLine();
+                                    partes[5] = laboratorioNuevo;
                                     break;
                                 case 6:
-                                    System.out.println("Ingrese el nuevo laboratorio del " + tipoProducto + ":");
-                                    String laboratorioNuevo = scanner.nextLine();
-                                    partes[6] = laboratorioNuevo;
-                                    break;
-                                case 7:
+                                    if (tipoProducto.equals("medicamento")) {
+                                        System.out.println("Ingresa la nueva forma farmaceutica del medicamento: ");
+                                        String formaFarmaceutica = scanner.nextLine();
+                                        partes[6] = formaFarmaceutica;
+                                        break;
+                                    } else {
+                                        break;
+                                    }
+
+                                case 0:
                                     break;
                                 default:
                                     System.out.println("Opción inválida");
                                     break;
                             }
-                        } while (opcion != 7);
+                        } while (opcion != 0);
                         seEdito = true;
                     }
                     bufferNuevo.write(String.join(",", partes));
