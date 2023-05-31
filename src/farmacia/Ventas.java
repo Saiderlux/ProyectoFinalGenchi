@@ -94,9 +94,12 @@ public class Ventas {
     }
 
     private Medicamento buscarMedicamentoPorId(String id) {
+        Medicamento medicamento = null;
+        FileReader fr = null;
+        BufferedReader br = null;
         try {
-            FileReader fr = new FileReader(MEDICAMENTO_FILE);
-            BufferedReader br = new BufferedReader(fr);
+            fr = new FileReader(MEDICAMENTO_FILE);
+            br = new BufferedReader(fr);
 
             String line;
             while ((line = br.readLine()) != null) {
@@ -118,15 +121,29 @@ public class Ventas {
             fr.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+                if (fr != null) {
+                    fr.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        return null;
+        return medicamento;
     }
 
     private Higiene buscarProductoHigienePorId(String id) throws ParseException {
+        Higiene higiene = null;
+        FileReader fr = null;
+        BufferedReader br = null;
         try {
-            FileReader fr = new FileReader(HIGIENE_FILE);
-            BufferedReader br = new BufferedReader(fr);
+            fr = new FileReader(HIGIENE_FILE);
+            br = new BufferedReader(fr);
 
             String line;
             while ((line = br.readLine()) != null) {
@@ -147,9 +164,20 @@ public class Ventas {
             fr.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+                if (fr != null) {
+                    fr.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        return null;
+        return higiene;
     }
 
     private double calcularTotalVenta(List<Producto> carrito, int cantidad) {
@@ -305,13 +333,21 @@ public class Ventas {
                 bw.write(line);
                 bw.newLine();
             }
-            archivo.delete();
-            archivoTemporal.renameTo(archivo);
+
             br.close();
             fr.close();
             bw.close();
             fw.close();
 
+            if (archivo.delete()) {
+                if (archivoTemporal.renameTo(archivo)) {
+                    System.out.println("El archivo temporal se ha renombrado exitosamente.");
+                } else {
+                    System.out.println("No se pudo renombrar el archivo temporal.");
+                }
+            } else {
+                System.out.println("No se pudo eliminar el archivo original.");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -351,10 +387,14 @@ public class Ventas {
             bw.close();
             fw.close();
 
-            if (archivo.renameTo(archivoTemporal)) {
-                System.out.println("El archivo temporal se ha renombrado exitosamente.");
+            if (archivo.delete()) {
+                if (archivoTemporal.renameTo(archivo)) {
+                    System.out.println("El archivo temporal se ha renombrado exitosamente.");
+                } else {
+                    System.out.println("No se pudo renombrar el archivo temporal.");
+                }
             } else {
-                System.out.println("No se pudo renombrar el archivo temporal.");
+                System.out.println("No se pudo eliminar el archivo original.");
             }
         } catch (IOException e) {
             e.printStackTrace();
