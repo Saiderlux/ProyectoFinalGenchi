@@ -11,4 +11,10 @@ public class Administrador extends Usuario {
         super(nombre, password);
     }
 
+    // Sobrescribir el método inicio para la clase Administrador
+    @Override
+    public boolean inicio() {
+        IniciarAdmin iniciarAdmin = new IniciarAdmin();
+        return iniciarAdmin.inicio(this);
+    }
 }

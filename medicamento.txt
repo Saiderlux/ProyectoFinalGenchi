@@ -1,1 +1,1 @@
-M1,Paracetamol,Quita el dolor,50.0,100,Pfizer,Tabletas
+M1,Paracetamol,Quita el dolor,50.00,50,Pfizer,Tabletas

@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class IniciarAdmin {
 
-    public boolean inicio(String usuario, String contraseña) {
+    public boolean inicio(Usuario usuario) {
         try {
             FileReader reader = new FileReader("administradores.txt");
             BufferedReader buffer = new BufferedReader(reader);
@@ -23,7 +23,7 @@ public class IniciarAdmin {
                 String[] partes = linea.split(",");
                 String nombreUsuario = partes[0];
                 String password = partes[1];
-                if (nombreUsuario.equals(usuario) && password.equals(contraseña)) {
+                if (nombreUsuario.equals(usuario.getNombre()) && password.equals(usuario.getPassword())) {
                     buffer.close();
                     return true;
                 }
@@ -33,6 +33,5 @@ public class IniciarAdmin {
             System.out.println("Error al leer el archivo: " + e.getMessage());
         }
         return false;
-
     }
 }

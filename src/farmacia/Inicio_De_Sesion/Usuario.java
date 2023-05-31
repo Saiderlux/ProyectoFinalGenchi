@@ -2,7 +2,7 @@
 package farmacia.Inicio_De_Sesion;
 
 // Clase base para usuarios
-abstract class Usuario {
+public abstract class Usuario {
     protected String nombre;
     protected String password;
 
@@ -19,7 +19,6 @@ abstract class Usuario {
         return password;
     }
 
+    // Método inicio polimórfico
+    public abstract boolean inicio();
 }
-
-
-

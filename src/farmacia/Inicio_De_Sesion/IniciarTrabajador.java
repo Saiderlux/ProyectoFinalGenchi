@@ -13,24 +13,24 @@ import java.io.IOException;
  * @author Ssaid
  */
 public class IniciarTrabajador {
-    public boolean inicio(String usuario, String contraseña) {
-          try {
-        FileReader reader = new FileReader("trabajadores.txt");
-        BufferedReader buffer = new BufferedReader(reader);
-        String linea;
-        while ((linea = buffer.readLine()) != null) {
-            String[] partes = linea.split(",");
-            String nombreUsuario = partes[0];
-            String password = partes[1];
-            if (nombreUsuario.equals(usuario) && password.equals(contraseña)) {
-                buffer.close();
-                return true;
+    public boolean inicio(Usuario usuario) {
+        try {
+            FileReader reader = new FileReader("trabajadores.txt");
+            BufferedReader buffer = new BufferedReader(reader);
+            String linea;
+            while ((linea = buffer.readLine()) != null) {
+                String[] partes = linea.split(",");
+                String nombreUsuario = partes[0];
+                String password = partes[1];
+                if (nombreUsuario.equals(usuario.getNombre()) && password.equals(usuario.getPassword())) {
+                    buffer.close();
+                    return true;
+                }
             }
+            buffer.close();
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo: " + e.getMessage());
         }
-        buffer.close();
-    } catch (IOException e) {
-        System.out.println("Error al leer el archivo: " + e.getMessage());
+        return false;
     }
-    return false;
-}
 }

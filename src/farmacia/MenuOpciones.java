@@ -8,6 +8,7 @@ import farmacia.Inicio_De_Sesion.Trabajador;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Scanner;
+import farmacia.Inicio_De_Sesion.Usuario;
 
 import java.util.Scanner;
 
@@ -20,12 +21,10 @@ public class MenuOpciones {
     public void MenuGlobal() throws IOException, ParseException {
 
         SistemaUsuarios sistemaUsuarios = new SistemaUsuarios();
-        IniciarAdmin iniciarAdmin = new IniciarAdmin();
-        IniciarTrabajador iniciarTrabajador = new IniciarTrabajador();
         System.out.println("Iniciando sistema...\n");
 
         // Verificar si hay al menos un administrador en el sistema
-        if (sistemaUsuarios.archivoConDatos("administradores.txt") == false) {
+        if (!sistemaUsuarios.archivoConDatos("administradores.txt")) {
             System.out.println("No hay administradores en el sistema. Debe agregar uno.");
             System.out.print("Nombre de usuario: ");
             String nombre = scanner.nextLine();
@@ -38,7 +37,7 @@ public class MenuOpciones {
 
         while (true) {
 
-            System.out.println("Bienvenido ¿Que deseas realizar?(Seleccione una opcion)");
+            System.out.println("Bienvenido ¿Qué deseas realizar? (Seleccione una opción)");
             System.out.println("1. Ingresar al sistema de inventario");
             System.out.println("2. Ingresar al sistema de ventas");
             System.out.println("3. Dar de alta nuevos usuarios (SE REQUIERE CUENTA DE ADMINISTRADOR)");
@@ -51,11 +50,12 @@ public class MenuOpciones {
                     System.out.println("Introduce tu contraseña");
                     contraseña = scanner.next();
 
-                    if (iniciarAdmin.inicio(usuario, contraseña) == true || iniciarTrabajador.inicio(usuario, contraseña) == true) {
+                    Usuario usuarioIngresado = new Trabajador(usuario, contraseña);
+                    if (usuarioIngresado.inicio()) {
                         System.out.println("\nInicio de sesión exitoso");
                         MenuProductos();
                     } else {
-                        System.out.println("\nEl usuario o contraseña son invalidos\n");
+                        System.out.println("\nEl usuario o contraseña son inválidos\n");
                     }
                     break;
                 case 2:
@@ -64,14 +64,15 @@ public class MenuOpciones {
 
                     System.out.println("Introduce tu contraseña");
                     contraseña = scanner.next();
-
-                    if (iniciarAdmin.inicio(usuario, contraseña) == true || iniciarTrabajador.inicio(usuario, contraseña) == true) {
+                    usuarioIngresado = new Administrador(usuario, contraseña);
+                    usuarioIngresado = new Trabajador(usuario, contraseña);
+                    if (usuarioIngresado.inicio()) {
                         System.out.println("\nInicio de sesión exitoso");
                         Ventas ventas = new Ventas();
-                        ventas.iniciarVenta();
+                        ventas.menuVentas();
                         break;
                     } else {
-                        System.out.println("\nEl usuario o contraseña son invalidos\n");
+                        System.out.println("\nEl usuario o contraseña son inválidos\n");
                     }
                     break;
                 case 3:
@@ -81,14 +82,13 @@ public class MenuOpciones {
                     System.out.println("Ingrese su contraseña:");
                     contraseña = scanner.next();
 
-                    boolean esValido = iniciarAdmin.inicio(usuario, contraseña);
+                    usuarioIngresado = new Administrador(usuario, contraseña);
 
-                    if (esValido) {
+                    if (usuarioIngresado.inicio()) {
                         System.out.println("\nInicio de sesión exitoso");
                         Acciones();
                     } else {
                         System.out.println("\nEl usuario o la contraseña no son válidos\n");
-
                     }
 
                     break;
@@ -96,7 +96,6 @@ public class MenuOpciones {
                     throw new AssertionError();
             }
         }
-
     }
 
     public void MenuProductos() throws IOException, ParseException {
@@ -255,4 +254,5 @@ public class MenuOpciones {
             }
         }
     }
+
 }

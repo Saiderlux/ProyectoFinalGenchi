@@ -49,12 +49,16 @@ abstract class Consultar {
                     System.out.println("Descripción: " + partes[2]);
                     System.out.println("Precio: " + partes[3]);
                     System.out.println("Cantidad: " + partes[4]);
-                    System.out.println("Fecha de caducidad: " + partes[5]);
-                    System.out.println(procedencia + ": " + partes[6]);
+                    System.out.println(procedencia + ": " + partes[5]);
+                    if (tipoProducto.equals("medicamento")) {
+                        System.out.println("Forma farmaceutica: " + partes[6]);
+                        break;
+                    }
                     break;
                 }
             }
             buffer.close();
+            reader.close();
             if (!seEncontro) {
                 System.out.println("No se encontró el " + tipoProducto + "o con ID " + idAConsultar);
             }

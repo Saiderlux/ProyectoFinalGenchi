@@ -400,4 +400,67 @@ public class Ventas {
             e.printStackTrace();
         }
     }
+
+    private void generarReporteVentas() {
+        try {
+            FileReader fr = new FileReader(VENTAS_FILE);
+            BufferedReader br = new BufferedReader(fr);
+
+            System.out.println("Reporte de Ventas");
+            System.out.println("=================");
+            System.out.println();
+
+            System.out.printf("%-10s %-30s %-10s %-10s %-10s\n", "ID Venta", "Productos", "Total", "Fecha", "Hora");
+            System.out.println("====================================================================");
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] attributes = line.split(",");
+                int ventaId = Integer.parseInt(attributes[0]);
+                String productosVendidos = attributes[1];
+                double totalVenta = Double.parseDouble(attributes[2]);
+                String fecha = attributes[3];
+                String hora = attributes[4];
+
+                System.out.printf("%-10s %-30s %-10s %-10s %-10s\n", ventaId, productosVendidos, totalVenta, fecha, hora);
+            }
+
+            br.close();
+            fr.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void menuVentas() throws ParseException {
+        
+        Scanner scanner = new Scanner(System.in);
+        int opcion = 0;
+
+        while (opcion != 3) {
+            System.out.println("\nMenú de ventas");
+            System.out.println("==============");
+            System.out.println("1. Realizar venta");
+            System.out.println("2. Generar reporte de ventas");
+            System.out.println("3. Salir");
+            System.out.print("Ingrese una opción: ");
+            opcion = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcion) {
+                case 1:
+                    iniciarVenta();
+                    break;
+                case 2:
+                    generarReporteVentas();
+                    break;
+                case 3:
+                    System.out.println("Saliendo...");
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+                    break;
+            }
+        }
+    }
 }
