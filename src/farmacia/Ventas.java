@@ -33,15 +33,24 @@ public class Ventas {
         System.out.println("Bienvenido a Farmacia Amor");
         System.out.println("============================");
         int cantidad = 0;
-        Producto producto = null;
         boolean ventaActiva = true;
         List<Producto> carrito = new ArrayList<>();
+        double totalVenta = 0.0; // Variable para almacenar el total de la venta
+        String fecha = obtenerFechaActual();
+        String hora = obtenerHoraActual();
 
         while (ventaActiva) {
-            System.out.println("Ingrese el ID del producto a vender (M para medicamento, H para producto de higiene):");
+            System.out.println("\nIngrese el ID del producto a vender (M para medicamento, H para producto de higiene):");
+            System.out.println("Para salir, ingrese 'S' y presione Enter.");
             String id = scanner.next();
             scanner.nextLine();
 
+            if (id.equalsIgnoreCase("S")) {
+                ventaActiva = false;
+                break;
+            }
+
+            Producto producto = null;
             if (id.startsWith("M")) {
                 producto = buscarMedicamentoPorId(id);
             } else if (id.startsWith("H")) {
@@ -50,6 +59,19 @@ public class Ventas {
 
             if (producto == null) {
                 System.out.println("El producto con el ID ingresado no existe. Intente nuevamente.");
+                continue;
+            }
+
+            boolean productoDuplicado = false;
+            for (Producto p : carrito) {
+                if (p.getId().equals(producto.getId())) {
+                    productoDuplicado = true;
+                    break;
+                }
+            }
+
+            if (productoDuplicado) {
+                System.out.println("El producto ya se encuentra en el carrito. No se puede agregar nuevamente.");
                 continue;
             }
 
@@ -66,16 +88,16 @@ public class Ventas {
                 System.out.println("Quedan muy pocas existencias del producto. Considere dar de alta más productos en el sistema.");
             }
 
-            // Confirmación de la operación
             System.out.println("¿Estás seguro de realizar esta venta? (S/N):");
             String confirmacion = scanner.next();
             scanner.nextLine();
 
             if (confirmacion.equalsIgnoreCase("S")) {
+
                 producto.setCantidad(producto.getCantidad() - cantidad);
                 carrito.add(producto);
                 System.out.println("Producto agregado al carrito de compra.");
-
+                totalVenta += (producto.getPrecio() * cantidad); // Actualizar el total de la venta
             } else {
                 System.out.println("Venta cancelada.");
             }
@@ -89,15 +111,6 @@ public class Ventas {
             }
         }
 
-        double totalVenta = calcularTotalVenta(carrito, cantidad);
-        String fecha = obtenerFechaActual();
-        String hora = obtenerHoraActual();
-
-        actualizarCantidadProductos(carrito, cantidad);
-        generarTicket(carrito, totalVenta, fecha, hora, cantidad, producto.getPrecio());
-
-        System.out.println("Venta finalizada. Gracias por su compra.");
-
         System.out.println("Total a pagar: " + totalVenta);
 
         System.out.println("Ingrese la cantidad con la que el cliente pagó:");
@@ -110,7 +123,17 @@ public class Ventas {
 
         double cambio = cantidadPagada - totalVenta;
         System.out.println("Cambio a devolver: " + cambio);
+
+        // Generar el ticket después de obtener la cantidad pagada y el cambio
+        generarTicket(carrito, totalVenta, fecha, hora, cantidad, totalVenta, cantidadPagada, cambio);
+
+        // Actualizar las cantidades de los productos
+        actualizarCantidadProductos(carrito, cantidad);
+
+        // Guardar la venta
         guardarVenta(carrito, totalVenta, cantidadPagada, fecha, hora);
+
+        System.out.println("Venta finalizada. Gracias por su compra.");
     }
 
     private Medicamento buscarMedicamentoPorId(String id) {
@@ -263,7 +286,7 @@ public class Ventas {
         return productosVendidos.toString();
     }
 
-    private void generarTicket(List<Producto> carrito, double totalVenta, String fecha, String hora, int cantidad, double precio) {
+    private void generarTicket(List<Producto> carrito, double totalVenta, String fecha, String hora, int cantidad, double precio, double cantidadPagada, double cambio) {
         try {
             FileWriter writer = new FileWriter(TICKET_FILE);
             BufferedWriter buffer = new BufferedWriter(writer);
@@ -281,11 +304,15 @@ public class Ventas {
             buffer.write("Productos:");
             buffer.newLine();
             for (Producto producto : carrito) {
-                buffer.write("- " + producto.getNombre() + "(" + cantidad + "x" + precio + ")");
+                buffer.write("-" + producto.getNombre() + " (" + cantidad + " x " + producto.getPrecio() + ")");
                 buffer.newLine();
             }
             buffer.newLine();
             buffer.write("Total: $" + totalVenta);
+            buffer.newLine();
+            buffer.write("Cantidad pagada: $" + cantidadPagada);
+            buffer.newLine();
+            buffer.write("Cambio: $" + cambio);
             buffer.newLine();
 
             buffer.close();
