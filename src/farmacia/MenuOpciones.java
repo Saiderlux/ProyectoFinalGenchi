@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Scanner;
 import farmacia.Inicio_De_Sesion.Usuario;
+import java.io.File;
 
 import java.util.Scanner;
 
@@ -38,9 +39,9 @@ public class MenuOpciones {
         while (true) {
 
             System.out.println("Bienvenido ¿Qué deseas realizar? (Seleccione una opción)");
-            System.out.println("1. Ingresar al sistema de inventario");
-            System.out.println("2. Ingresar al sistema de ventas");
-            System.out.println("3. Dar de alta nuevos usuarios (SE REQUIERE CUENTA DE ADMINISTRADOR)");
+            System.out.println("1. Dar de alta nuevos usuarios (SE REQUIERE CUENTA DE ADMINISTRADOR)");
+            System.out.println("2. Opciones de trabajador (Inventario y ventas)");
+
             opcion = scanner.nextInt();
             switch (opcion) {
                 case 1:
@@ -50,52 +51,74 @@ public class MenuOpciones {
                     System.out.println("Introduce tu contraseña");
                     contraseña = scanner.next();
 
-                    Usuario usuarioIngresado = new Trabajador(usuario, contraseña);
+                    Usuario usuarioIngresado = new Administrador(usuario, contraseña);
                     if (usuarioIngresado.inicio()) {
                         System.out.println("\nInicio de sesión exitoso");
-                        MenuProductos();
+                        Acciones();
                     } else {
                         System.out.println("\nEl usuario o contraseña son inválidos\n");
                     }
                     break;
                 case 2:
-                    System.out.println("\nIntroduce tu nombre de usuario");
-                    usuario = scanner.next();
-
-                    System.out.println("Introduce tu contraseña");
-                    contraseña = scanner.next();
-                    usuarioIngresado = new Administrador(usuario, contraseña);
-                    usuarioIngresado = new Trabajador(usuario, contraseña);
-                    if (usuarioIngresado.inicio()) {
-                        System.out.println("\nInicio de sesión exitoso");
-                        Ventas ventas = new Ventas();
-                        ventas.menuVentas();
-                        break;
+                    File trabajadores = new File("trabajadores.txt");
+                    if (trabajadores.length() == 0 || !trabajadores.exists()) {
+                        System.out.println("\n**El administrador debe dar de alta usuarios**\n");
                     } else {
-                        System.out.println("\nEl usuario o contraseña son inválidos\n");
+                        System.out.println("\nIntroduce tu nombre de usuario");
+                        usuario = scanner.next();
+
+                        System.out.println("Introduce tu contraseña");
+                        contraseña = scanner.next();
+
+                        usuarioIngresado = new Trabajador(usuario, contraseña);
+                        if (usuarioIngresado.inicio()) {
+                            System.out.println("\nInicio de sesión exitoso");
+                            menuTrabajadores();
+                            break;
+                        } else {
+                            System.out.println("\nEl usuario o contraseña son inválidos\n");
+                        }
                     }
-                    break;
-                case 3:
-                    System.out.println("\nIngrese su nombre de usuario:");
-                    usuario = scanner.next();
-
-                    System.out.println("Ingrese su contraseña:");
-                    contraseña = scanner.next();
-
-                    usuarioIngresado = new Administrador(usuario, contraseña);
-
-                    if (usuarioIngresado.inicio()) {
-                        System.out.println("\nInicio de sesión exitoso");
-                        Acciones();
-                    } else {
-                        System.out.println("\nEl usuario o la contraseña no son válidos\n");
-                    }
-
                     break;
                 default:
                     throw new AssertionError();
             }
         }
+    }
+
+    public void menuTrabajadores() throws ParseException, IOException {
+
+        Scanner scanner = new Scanner(System.in);
+        int opcion;
+
+        do {
+            System.out.println("********** Opciones de trabajadores **********");
+            System.out.println("1. Inventario");
+            System.out.println("2. Ventas");
+            System.out.println("0. Salir");
+            System.out.println("Ingrese la opción deseada:");
+
+            opcion = scanner.nextInt();
+
+            switch (opcion) {
+
+                case 1:
+                    MenuProductos();
+                    break;
+                case 2:
+                    Ventas ventas = new Ventas();
+                    ventas.menuVentas();
+                    break;
+                case 0:
+                    System.out.println("Saliendo...");
+                    break;
+                default:
+                    System.out.println("Opción inválida. Intente nuevamente.");
+                    break;
+            }
+
+            System.out.println();
+        } while (opcion != 0);
     }
 
     public void MenuProductos() throws IOException, ParseException {
