@@ -66,10 +66,19 @@ public class Ventas {
                 System.out.println("Quedan muy pocas existencias del producto. Considere dar de alta más productos en el sistema.");
             }
 
-            producto.setCantidad(producto.getCantidad() - cantidad);
-            carrito.add(producto);
+            // Confirmación de la operación
+            System.out.println("¿Estás seguro de realizar esta venta? (S/N):");
+            String confirmacion = scanner.next();
+            scanner.nextLine();
 
-            System.out.println("Producto agregado al carrito de compra.");
+            if (confirmacion.equalsIgnoreCase("S")) {
+                producto.setCantidad(producto.getCantidad() - cantidad);
+                carrito.add(producto);
+                System.out.println("Producto agregado al carrito de compra.");
+
+            } else {
+                System.out.println("Venta cancelada.");
+            }
 
             System.out.println("¿Desea agregar otro producto? (S/N):");
             String opcion = scanner.next();
@@ -84,11 +93,24 @@ public class Ventas {
         String fecha = obtenerFechaActual();
         String hora = obtenerHoraActual();
 
-        guardarVenta(carrito, totalVenta, fecha, hora);
         actualizarCantidadProductos(carrito, cantidad);
         generarTicket(carrito, totalVenta, fecha, hora, cantidad, producto.getPrecio());
 
         System.out.println("Venta finalizada. Gracias por su compra.");
+
+        System.out.println("Total a pagar: " + totalVenta);
+
+        System.out.println("Ingrese la cantidad con la que el cliente pagó:");
+        double cantidadPagada = scanner.nextDouble();
+
+        while (cantidadPagada < totalVenta) {
+            System.out.println("La cantidad pagada es menor al total de la venta. Por favor, ingrese una cantidad válida.");
+            cantidadPagada = scanner.nextDouble();
+        }
+
+        double cambio = cantidadPagada - totalVenta;
+        System.out.println("Cambio a devolver: " + cambio);
+        guardarVenta(carrito, totalVenta, cantidadPagada, fecha, hora);
     }
 
     private Medicamento buscarMedicamentoPorId(String id) {
@@ -273,14 +295,14 @@ public class Ventas {
         }
     }
 
-    private void guardarVenta(List<Producto> carrito, double totalVenta, String fecha, String hora) {
+    private void guardarVenta(List<Producto> carrito, double totalVenta, Double cantidadPagada, String fecha, String hora) {
         try {
             FileWriter writer = new FileWriter(VENTAS_FILE, true);
             BufferedWriter buffer = new BufferedWriter(writer);
 
             int ventaId = obtenerSiguienteIdVenta();
             String productosVendidos = obtenerProductosVendidos(carrito);
-            String lineaVenta = String.format("%d,%s,%.2f,%s,%s", ventaId, productosVendidos, totalVenta, fecha, hora);
+            String lineaVenta = String.format("%d,%s,%.2f,%.2f,%s,%s", ventaId, productosVendidos, totalVenta, cantidadPagada, fecha, hora);
 
             buffer.write(lineaVenta);
             buffer.newLine();
@@ -339,7 +361,7 @@ public class Ventas {
 
             if (archivo.delete()) {
                 if (archivoTemporal.renameTo(archivo)) {
-                    System.out.println("El archivo temporal se ha renombrado exitosamente.");
+                    System.out.println("");
                 } else {
                     System.out.println("No se pudo renombrar el archivo temporal.");
                 }
@@ -387,7 +409,7 @@ public class Ventas {
 
             if (archivo.delete()) {
                 if (archivoTemporal.renameTo(archivo)) {
-                    System.out.println("El archivo temporal se ha renombrado exitosamente.");
+                    System.out.println("");
                 } else {
                     System.out.println("No se pudo renombrar el archivo temporal.");
                 }
@@ -408,8 +430,8 @@ public class Ventas {
             System.out.println("=================");
             System.out.println();
 
-            System.out.printf("%-10s %-30s %-10s %-10s %-10s\n", "ID Venta", "Productos", "Total", "Fecha", "Hora");
-            System.out.println("====================================================================");
+            System.out.printf("%-10s %-30s %-10s %-15s %-10s %-10s\n", "ID Venta", "Productos", "Total", "Pagado", "Fecha", "Hora");
+            System.out.println("============================================================================");
 
             String line;
             while ((line = br.readLine()) != null) {
@@ -417,10 +439,11 @@ public class Ventas {
                 int ventaId = Integer.parseInt(attributes[0]);
                 String productosVendidos = attributes[1];
                 double totalVenta = Double.parseDouble(attributes[2]);
-                String fecha = attributes[3];
-                String hora = attributes[4];
+                double cantidadPagada = Double.parseDouble(attributes[3]);
+                String fecha = attributes[4];
+                String hora = attributes[5];
 
-                System.out.printf("%-10s %-30s %-10s %-10s %-10s\n", ventaId, productosVendidos, totalVenta, fecha, hora);
+                System.out.printf("%-10s %-30s %-10s %-15s %-10s %-10s\n", ventaId, productosVendidos, totalVenta, cantidadPagada, fecha, hora);
             }
 
             br.close();
@@ -429,9 +452,9 @@ public class Ventas {
             e.printStackTrace();
         }
     }
-    
+
     public void menuVentas() throws ParseException {
-        
+
         Scanner scanner = new Scanner(System.in);
         int opcion = 0;
 
