@@ -480,6 +480,79 @@ public class Ventas {
         }
     }
 
+    public void cierreSistema(List<Venta> ventasRealizadas) {
+        Date fechaHoraCierre = new Date(); // Obtener la fecha y hora actual de cierre del sistema
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatoHora = new SimpleDateFormat("HH-mm-ss");
+        String fechaCierre = formatoFecha.format(fechaHoraCierre);
+        String horaCierre = formatoHora.format(fechaHoraCierre);
+
+        String nombreArchivo = fechaCierre + "_" + horaCierre + ".txt";
+
+        try {
+            FileWriter writer = new FileWriter(nombreArchivo);
+            BufferedWriter buffer = new BufferedWriter(writer);
+
+            for (Venta venta : ventasRealizadas) {
+                String lineaVenta = String.format("%d,%s,%.2f,%.2f,%s,%s",
+                        venta.getId(),
+                        venta.getProductosVendidos(),
+                        venta.getTotalVenta(),
+                        venta.getCantidadPagada(),
+                        venta.getFecha(),
+                        venta.getHora());
+
+                buffer.write(lineaVenta);
+                buffer.newLine();
+            }
+
+            buffer.close();
+            writer.close();
+
+            System.out.println("Se ha creado el archivo de ventas: " + nombreArchivo);
+        } catch (IOException e) {
+            System.out.println("Error al crear el archivo de ventas.");
+            e.printStackTrace();
+        }
+    }
+
+    private static List<Venta> obtenerVentasRealizadas() {
+        List<Venta> ventasRealizadas = new ArrayList<>();
+
+        try {
+            // Leer el archivo de ventas
+            FileReader reader = new FileReader(VENTAS_FILE);
+            BufferedReader buffer = new BufferedReader(reader);
+
+            String linea;
+            while ((linea = buffer.readLine()) != null) {
+                // Separar los valores de la línea
+                String[] valores = linea.split(",");
+
+                // Obtener los valores individuales
+                int ventaId = Integer.parseInt(valores[0]);
+                String productosVendidos = valores[1];
+                double totalVenta = Double.parseDouble(valores[2]);
+                double cantidadPagada = Double.parseDouble(valores[3]);
+                String fecha = valores[4];
+                String hora = valores[5];
+
+                // Crear una instancia de Venta con los valores obtenidos
+                Venta venta = new Venta(ventaId, productosVendidos, totalVenta, cantidadPagada, fecha, hora);
+
+                // Agregar la venta a la lista
+                ventasRealizadas.add(venta);
+            }
+
+            buffer.close();
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return ventasRealizadas;
+    }
+
     public void menuVentas() throws ParseException {
 
         Scanner scanner = new Scanner(System.in);
@@ -503,6 +576,15 @@ public class Ventas {
                     generarReporteVentas();
                     break;
                 case 3:
+                    System.out.println("Generando reporte de cierre de sistema...");
+                    // Crear una instancia de la clase Ventas
+                    Ventas ventas = new Ventas();
+
+                    // Obtener la lista de ventas realizadas durante la ejecución del programa
+                    List<Venta> ventasRealizadas = obtenerVentasRealizadas();
+
+                    // Llamar al método cierreSistema
+                    ventas.cierreSistema(ventasRealizadas);
                     System.out.println("Saliendo...");
                     break;
                 default:

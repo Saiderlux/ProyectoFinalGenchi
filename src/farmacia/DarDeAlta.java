@@ -46,6 +46,7 @@ abstract class DarDeAlta {
                 fr.close();
                 while (!end) {
                     System.out.println("Ingrese el ID del " + tipoProducto + ": (Solamente el número)");
+                    System.out.println("Considera que el ID se guardara con el prefijo " + identificador );
                     String id = scanner.next();
                     if (lista.contains(identificador + id)) {
                         System.out.println("El ID ingresado ya existe en el archivo. Ingresa otro ID");
