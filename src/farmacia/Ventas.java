@@ -32,8 +32,9 @@ public class Ventas {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Bienvenido a Farmacia Amor");
         System.out.println("============================");
-        int cantidad = 0;
+        List<Integer> cantidadesVendidas = new ArrayList<>(); // Lista para almacenar la cantidad vendida de cada producto
         boolean ventaActiva = true;
+        int cantidad = 0;
         List<Producto> carrito = new ArrayList<>();
         double totalVenta = 0.0; // Variable para almacenar el total de la venta
         String fecha = obtenerFechaActual();
@@ -93,9 +94,9 @@ public class Ventas {
             scanner.nextLine();
 
             if (confirmacion.equalsIgnoreCase("S")) {
-
                 producto.setCantidad(producto.getCantidad() - cantidad);
                 carrito.add(producto);
+                cantidadesVendidas.add(cantidad); // Agregar la cantidad vendida a la lista
                 System.out.println("Producto agregado al carrito de compra.");
                 totalVenta += (producto.getPrecio() * cantidad); // Actualizar el total de la venta
             } else {
@@ -108,6 +109,10 @@ public class Ventas {
 
             if (opcion.equalsIgnoreCase("N")) {
                 ventaActiva = false;
+            } else if (opcion.equalsIgnoreCase("S")) {
+                ventaActiva = true;
+            } else {
+                System.out.println("Opcion invalida");
             }
         }
 
@@ -125,10 +130,10 @@ public class Ventas {
         System.out.println("Cambio a devolver: " + cambio);
 
         // Generar el ticket después de obtener la cantidad pagada y el cambio
-        generarTicket(carrito, totalVenta, fecha, hora, cantidad, totalVenta, cantidadPagada, cambio);
-
+        generarTicket(carrito, cantidadesVendidas, totalVenta, fecha, hora, cantidadPagada, cambio);
+        
         // Actualizar las cantidades de los productos
-        actualizarCantidadProductos(carrito, cantidad);
+        actualizarCantidadProductos(carrito, cantidadesVendidas);
 
         // Guardar la venta
         guardarVenta(carrito, totalVenta, cantidadPagada, fecha, hora);
@@ -286,7 +291,7 @@ public class Ventas {
         return productosVendidos.toString();
     }
 
-    private void generarTicket(List<Producto> carrito, double totalVenta, String fecha, String hora, int cantidad, double precio, double cantidadPagada, double cambio) {
+    private void generarTicket(List<Producto> carrito, List<Integer> cantidadesVendidas, double totalVenta, String fecha, String hora, double cantidadPagada, double cambio) {
         try {
             FileWriter writer = new FileWriter(TICKET_FILE);
             BufferedWriter buffer = new BufferedWriter(writer);
@@ -303,8 +308,10 @@ public class Ventas {
             buffer.newLine();
             buffer.write("Productos:");
             buffer.newLine();
-            for (Producto producto : carrito) {
-                buffer.write("-" + producto.getNombre() + " (" + cantidad + " x " + producto.getPrecio() + ")");
+            for (int i = 0; i < carrito.size(); i++) {
+                Producto producto = carrito.get(i);
+                int cantidad = cantidadesVendidas.get(i); // Obtener la cantidad vendida del producto
+                buffer.write("- " + producto.getNombre() + " (" + cantidad + " x " + producto.getPrecio() + ")");
                 buffer.newLine();
             }
             buffer.newLine();
@@ -341,13 +348,13 @@ public class Ventas {
         }
     }
 
-    private void actualizarCantidadProductos(List<Producto> carrito, int cantidad) {
-        for (Producto producto : carrito) {
-            if (producto instanceof Medicamento) {
-                actualizarCantidadMedicamento((Medicamento) producto, cantidad);
-            } else if (producto instanceof Higiene) {
-                actualizarCantidadHigiene((Higiene) producto, cantidad);
-            }
+    private void actualizarCantidadProductos(List<Producto> carrito, List<Integer> cantidadesVendidas) {
+        for (int i = 0; i < carrito.size(); i++) {
+            Producto producto = carrito.get(i);
+            int cantidadVendida = cantidadesVendidas.get(i); // Obtener la cantidad vendida del producto
+
+            // Actualizar la cantidad del producto
+            producto.setCantidad(producto.getCantidad() - cantidadVendida);
         }
     }
 
@@ -557,7 +564,9 @@ public class Ventas {
 
         Scanner scanner = new Scanner(System.in);
         int opcion = 0;
-
+        File file = new File("ventas.txt");
+        File medicamento = new File("medicamento.txt");
+        File higiene = new File("productos_higiene.txt");
         while (opcion != 3) {
             System.out.println("\nMenú de ventas");
             System.out.println("==============");
@@ -570,22 +579,34 @@ public class Ventas {
 
             switch (opcion) {
                 case 1:
-                    iniciarVenta();
+                    if ((medicamento.length() == 0 || !medicamento.exists() && (higiene.length() == 0 || !higiene.exists()))) {
+                        System.out.println("Para realizar una venta primero debes dar de alta un producto");
+                    } else {
+                        iniciarVenta();
+                    }
                     break;
                 case 2:
-                    generarReporteVentas();
+                    if (!file.exists() || file.length() == 0) {
+                        System.out.println("Aún no se ha realizado alguna venta");
+                    } else {
+                        generarReporteVentas();
+                    }
                     break;
                 case 3:
-                    System.out.println("Generando reporte de cierre de sistema...");
-                    // Crear una instancia de la clase Ventas
-                    Ventas ventas = new Ventas();
+                    if (!file.exists() || file.length() == 0) {
+                        System.out.println("Aún no se ha realizado alguna venta");
+                    } else {
+                        System.out.println("Generando reporte de cierre de sistema...");
+                        // Crear una instancia de la clase Ventas
+                        Ventas ventas = new Ventas();
 
-                    // Obtener la lista de ventas realizadas durante la ejecución del programa
-                    List<Venta> ventasRealizadas = obtenerVentasRealizadas();
+                        // Obtener la lista de ventas realizadas durante la ejecución del programa
+                        List<Venta> ventasRealizadas = obtenerVentasRealizadas();
 
-                    // Llamar al método cierreSistema
-                    ventas.cierreSistema(ventasRealizadas);
-                    System.out.println("Saliendo...");
+                        // Llamar al método cierreSistema
+                        ventas.cierreSistema(ventasRealizadas);
+                        System.out.println("Saliendo...");
+                    }
                     break;
                 default:
                     System.out.println("Opción inválida.");

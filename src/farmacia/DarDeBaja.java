@@ -27,6 +27,7 @@ abstract class DarDeBaja {
     }
 
     public void darDeBaja() {
+
         try {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Ingrese el ID del medicamento a dar de baja: ");

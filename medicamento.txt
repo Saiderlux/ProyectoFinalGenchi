@@ -1,2 +1,2 @@
-M1,Paracetamol,Quita el dolor,50.00,72,Pfizer,Tabletas
-M2,Ibuprofeno,Quita el dolor,30.00,96,Pfizer,Pastillas
+M1,Paracetamol,Quita el dolor,50.00,66,Pfizer,Tabletas
+M2,Ibuprofeno,Quita el dolor,30.00,90,Pfizer,Pastillas
